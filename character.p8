@@ -1,3 +1,7 @@
+pico-8 cartridge // http://www.pico-8.com
+version 20
+__lua__
+
 
 Character = Drawable:new()
 
@@ -10,15 +14,24 @@ function Character:new(x, y, w, h, speed)
    character.speed = speed
 
    character.animations = {}
-   
-   character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20, false)   
+
+   character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20, false)
    character.animations.walkRightAnimation:setCycle(3, {0, 2, 3})
-   
+
    character.animations.walkLeftAnimation = Animation:new(4, 0, character.size, 20, true)
    character.animations.walkLeftAnimation:setCycle(3, {0, 2, 3})
-   
+
    character.currentAnimation = character.animations.walkRightAnimation
    return character
+end
+
+
+function Character:collide_wall(x,y)
+   grid_x = flr(x/8)
+   grid_y = flr(y/8)
+
+
+   return (fget(mget(grid_x,grid_y), 7))
 end
 
 function Character:update()
@@ -27,15 +40,17 @@ function Character:update()
    local move_y = 0
 
    if (btn(⬅️)) then
-      move_x = -self.speed
-   elseif (btn(➡️)) then
-      move_x = self.speed
+      move_x += -self.speed
+   end
+   if (btn(➡️)) then
+      move_x += self.speed
    end
 
    if (btn(⬆️)) then
-      move_y = -self.speed
-   elseif (btn(⬇️)) then
-      move_y = self.speed
+      move_y += -self.speed
+   end
+   if (btn(⬇️)) then
+      move_y += self.speed
    end
 
    if (move_x != 0 or move_y != 0) then
@@ -54,8 +69,16 @@ function Character:update()
 end
 
 function Character:move(x, y)
-   self.pos.x += x
-   self.pos.y += y
+   check_x = self.pos.x + x
+   check_y = self.pos.y + y
+
+   if (x > 0) check_x += 8 // Check of the right if going right
+   check_y += 14 // We only check the foot
+
+   if not(self:collide_wall(check_x, check_y)) then
+      self.pos.x += x
+      self.pos.y += y
+   end
 end
 
 function Character:setPos(x, y)
