@@ -7,7 +7,18 @@ function PcView:new(ticketId)
    
    pcView.menus = {}
    add(pcView.menus, DesktopMenu:new())
-   add(pcView.menus, SettingsMenu:new())
+
+   issues = generateIssues(1)
+
+   monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID) -- TODO ID
+   monitoringMenu:addSetting("internet status", true, false)
+   monitoringMenu:addSetting("hard drive status", true, false)
+   monitoringMenu:addSetting("ver num", true, false)
+   add(pcView.menus, monitoringMenu)
+
+   -- settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID) -- TODO ID
+   -- settingsMenu:addSetting("internet status", true, false)
+   -- add(pcView.menus, settingsMenu)
 
    i = 0
    for v in all(pcView.menus) do
@@ -40,7 +51,7 @@ function PcView:update()
 end
 
 function PcView:draw(t)
-   rectfill(0, 0, 127, 127, 1)
+   rectfill(0, 0, 127, 127, 13)
    
    for i=0, 5, 1 do
       rect(i, i, 127-i, 127-i, 6)
@@ -54,3 +65,32 @@ end
 
 
 
+function generateIssues(nbIssues)
+   issues = {}
+   issues.physical = {}
+   issues.settings = {}
+   issues.browser = {}
+   issues.virus = {}
+   
+   for i=0,nbIssues,1 do
+      
+      issueType = flr(rnd(4)) -- 0 : physical, 1 : settings, 2 : browser, 3: virus
+      
+      if issueType == 0 then
+	 issue = flr(rnd(4)) -- 0 : unplugged keyboard, 1 : unplugged mouse, 2 : unplugged screen, 3 : unplugged ethernet cable
+	 add(issues.physical, issue)
+      elseif issueType == 1 then
+	 issue = flr(rnd(3)) -- 0 : no internet, 1 : hard drive full, 2 : ver. num
+	 add(issues.settings, issue)
+      elseif issueType == 2 then
+	 add(issues.browser, 0) -- 0 : many toolbars
+      elseif issueType == 3 then
+	 issue = flr(rnd(2)) -- 0 : pron ads, 1 : ransomware, 2 : ????
+	 add(issues.virus, issue)
+      end
+      
+   end
+
+   
+end
+ 
