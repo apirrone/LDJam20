@@ -11,8 +11,14 @@ function Ticket:new(text, index)
    return ticket
 end
 
-function Ticket:draw()
-   print(self.text, 6, rowHeight*self.index + 9)
+function Ticket:draw_cropped()
+   cropped_text = sub(self.text, 0, 25) .. "..."
+   
+   print(cropped_text, 6, rowHeight*self.index + 9)
+end
+
+function Ticket:draw_full()
+   print(self.text, 6, 9)
 end
 
 
@@ -41,7 +47,6 @@ end
 -- =================================================================
 -- =================================================================
 -- =================================================================
--- En vrai il faudrait faire de l'héritage avec la classe view, mais j'ai la flemme de chercher comment faire. Todo à celui qui a la foi
 
 TicketsView = {}
 released = true
@@ -50,7 +55,7 @@ function TicketsView:new()
    
    ticketsView.tickets = {}
    ticketsView.selector = Selector:new(0)
-
+   ticketsView.displayState = 0 -- 0 : list, 1 : full message
    return ticketsView
 end
 
@@ -79,6 +84,13 @@ function TicketsView:update()
    else
       released = true
    end
+
+   if (btn(⬅️)) then -- show full message
+      self.displayState = 0      
+   elseif (btn(➡️)) then
+      self.displayState = 1
+   end
+   
    
 end
 
@@ -87,12 +99,26 @@ function TicketsView:draw(t)
    rect(1, 1, 126, 126, 5)
    rect(2, 2, 125, 125, 15)
 
-
-   for t in all(self.tickets) do
-      t:draw()
-   end
    
-   self.selector:draw()
+   if (self.displayState == 0) then
+
+      for t in all(self.tickets) do
+	 t:draw_cropped()
+      end
+   
+      self.selector:draw()
+      
+      print("see full ticket : \145", 44, 118, 15)
+   else
+
+      for t in all(self.tickets) do
+	 if t.index == self.selector.pos then
+	    t:draw_full()
+	 end
+      end
+      
+      print("go back : \139", 76, 118, 15)
+   end
 
 end
 

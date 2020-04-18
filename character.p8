@@ -16,6 +16,9 @@ function Character:new(x, y, w, h, speed)
    
    character.animations.walkLeftAnimation = Animation:new(4, 0, character.size, 20, true)
    character.animations.walkLeftAnimation:setCycle(3, {0, 2, 3})
+
+   character.animations.walkUpAnimation = Animation:new(4, 0, character.size, 20, false)
+   character.animations.walkUpAnimation:setCycle(3, {4, 6, 7})
    
    character.currentAnimation = character.animations.walkRightAnimation
    return character
@@ -46,6 +49,8 @@ function Character:update()
       self.currentAnimation = self.animations.walkLeftAnimation
    elseif (move_x > 0) then
       self.currentAnimation = self.animations.walkRightAnimation
+   elseif (move_y < 0) then
+      self.currentAnimation = self.animations.walkUpAnimation
    elseif (move_y == 0) then
       self.currentAnimation.freeze = true
    end

@@ -8,13 +8,15 @@ t = 0
 function _init()
 
    mapView = MapView:new(Character:new(10, 10, 1, 2, 1))
+   
    ticketsView = TicketsView:new()
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
+   ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline")
+   ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+
    
    currentView = ticketsView
    -- currentView = mapView
@@ -26,7 +28,7 @@ function _update60()
 
    -- ===============================
    -- change view test
-   if (btn(4)) then -- N
+   if (btn(4)) then -- C
       currentView = ticketsView
    end
 
