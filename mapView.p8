@@ -9,6 +9,7 @@ function MapView:new(player)
 
    mapView.player = player
    mapView.NPCs = {}
+   mapView.size = {w = 128, h = 128} -- TODO: use definitive size
 
    return mapView
 end
@@ -22,14 +23,14 @@ function MapView:updateCamera()
    camX = self.player.pos.x - 64;
    camY = self.player.pos.y - 64;
 
-   camX = min(max(camX,0), 256 -64)
-   camY = min(max(camY,0), 64)
+   camX = min(max(camX,0), self.size.w - 64)
+   camY = min(max(camY,0), self.size.h - 64)
 
    camera(camX, camY)
 end
 
 function MapView:update()
-   self.player:update()
+   self.player:update(self)
    for npc in all(self.NPCs) do
       npc:update()
    end

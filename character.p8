@@ -45,7 +45,7 @@ function collide_wall(hitbox)
    return is_wall(x0,y0) or is_wall(x0, y1) or is_wall(x1,y0) or is_wall(x1,y1)
 end
 
-function Character:update()
+function Character:update(mapView)
 
    local move_x = 0
    local move_y = 0
@@ -83,18 +83,21 @@ function Character:update()
       self.currentAnimation.freeze = true
    end
 
-   self:move(move_x, move_y)
+   self:move(move_x, move_y, mapView.size)
 end
 
-function Character:move(x, y)
+function Character:move(x, y, bounds)
    new_x = self.pos.x + x
    new_y = self.pos.y + y
+
+   new_x = min(max(new_x, 0), bounds.w)
+   new_y = min(max(new_y, 0), bounds.h)
 
    hitbox_x = { x0 = new_x +1 , y0 = self.pos.y + 13, x1 = new_x + 7, y1 = self.pos.y + 15}
    hitbox_y = { x0 = self.pos.x +1 , y0 = new_y + 13, x1 = self.pos.x + 7, y1 = new_y + 15}
 
-   if not(collide_wall(hitbox_x)) then self.pos.x += x end
-   if not(collide_wall(hitbox_y)) then self.pos.y += y end
+   if not(collide_wall(hitbox_x)) then self.pos.x = new_x end
+   if not(collide_wall(hitbox_y)) then self.pos.y = new_y end
 
 end
 
