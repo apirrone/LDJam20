@@ -2,19 +2,30 @@ pico-8 cartridge // http://www.pico-8.com
 version 18
 __lua__
 
-#include Character.p8
+#include character.p8
+#include animation.p8
 
+dt = null
+t = 0
 function _init()
    character = Character:new(10, 10, 2, 2, 2)
+
 end
 
-function _update()
+function _update60()
    character:handleInputs()
 
-   
+   if(dt == null) then
+      local target_fps = stat(8)
+      dt = 1 / target_fps
+   end
+
+   t += flr(dt*1000)
+
 end
 
 function _draw()
    cls()
-   character:draw()
+   -- print("t: " .. t)
+   character:draw(t)
 end

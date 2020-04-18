@@ -1,3 +1,4 @@
+
 Character = {}
 
 function Character:new(x, y, w, h, speed)
@@ -12,7 +13,10 @@ function Character:new(x, y, w, h, speed)
    character.size.h = h
 
    character.speed = speed
-   
+
+   character.animations = {}
+   character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20)
+   character.currentAnimation = character.animations.walkRightAnimation
    return character
 end
 
@@ -24,9 +28,9 @@ function Character:handleInputs()
    if (btn(⬅️)) then
       move_x = -self.speed
    elseif (btn(➡️)) then
-      move_x = self.speed
-      
+      move_x = self.speed      
    end
+   
    if (btn(⬆️)) then
       move_y = -self.speed
    elseif (btn(⬇️)) then
@@ -34,7 +38,6 @@ function Character:handleInputs()
    end
 
    self:move(move_x, move_y)
-   
 end
 
 function Character:move(x, y)
@@ -48,6 +51,6 @@ function Character:setPos(x, y)
 end
 
 
-function Character:draw()
-   spr(0, self.pos.x, self.pos.y, self.size.w, self.size.h)
+function Character:draw(t)
+   self.currentAnimation:draw(self.pos, t)
 end
