@@ -5,37 +5,36 @@ __lua__
 
 dt = null
 t = 0
+
+-- =======================
+-- DEBUG
+viewCycle = 2
+nbViews = 3
+-- =======================
 function _init()
 
-   mapView = MapView:new(Character:new(10, 10, 1, 2, 1))
-   ticketsView = TicketsView:new()
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
-   ticketsView:addTicket("bonjour, mon pc il est dead")
+   mapView = MapView:new(Character:new(60, 60, 1, 2, 1))
    
-   currentView = ticketsView
+   ticketsView = TicketsView:new()
+   ticketsView:addTicket("1 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline")
+   ticketsView:addTicket("2 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("3 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("4 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("5 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketsView:addTicket("6 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+
+   pcView = PcView:new()
+   
+   
+   -- currentView = ticketsView
    -- currentView = mapView
+   -- currentView = pcView
    palt(11, true)
 
 end
 
 function _update60()
-
-   -- ===============================
-   -- change view test
-   if (btn(4)) then -- N
-      currentView = ticketsView
-   end
-
-   if (btn(5)) then -- X
-      currentView = mapView
-   end
-   -- ===============================
    
-   currentView:update()
 
    if(dt == null) then
       local target_fps = stat(8)
@@ -43,6 +42,30 @@ function _update60()
    end
 
    t += flr(dt*1000)
+
+   
+
+   -- ===============================
+   -- change view test
+   if (btnp(4)) then -- C
+      viewCycle = (viewCycle+1)%nbViews
+   end
+
+   if viewCycle == 0 then
+      currentView = mapView
+   elseif viewCycle == 1 then
+      currentView = ticketsView
+   elseif viewCycle == 2 then
+      currentView = pcView
+   end
+   -- ===============================
+
+   -- if (btnp(5)) then -- X
+   --    currentView = mapView
+   -- end
+   
+   currentView:update()
+
 
 end
 
