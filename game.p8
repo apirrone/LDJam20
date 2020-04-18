@@ -8,8 +8,7 @@ __lua__
 dt = null
 t = 0
 function _init()
-   character = Character:new(10, 10, 2, 2, 2)
-
+   character = Character:new(10, 10, 1, 2, 2)
 end
 
 function _update60()

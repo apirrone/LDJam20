@@ -15,7 +15,10 @@ function Character:new(x, y, w, h, speed)
    character.speed = speed
 
    character.animations = {}
-   character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20)
+   character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20, false)
+   character.animations.walkLeftAnimation = Animation:new(4, 0, character.size, 20, true)
+   character.animations.idleAnimationRight = Animation:new(1, 0, character.size, 20, false)
+   character.animations.idleAnimationLeft = Animation:new(1, 0, character.size, 20, true)
    character.currentAnimation = character.animations.walkRightAnimation
    return character
 end
@@ -37,6 +40,18 @@ function Character:handleInputs()
       move_y = self.speed
    end
 
+   if (move_x != 0 or move_y != 0) then
+      character.currentAnimation.freeze = false
+   end
+   
+   if (move_x < 0) then
+      character.currentAnimation = character.animations.walkLeftAnimation
+   elseif (move_x > 0) then
+      character.currentAnimation = character.animations.walkRightAnimation
+   elseif (move_y == 0) then
+      character.currentAnimation.freeze = true
+   end
+   
    self:move(move_x, move_y)
 end
 
