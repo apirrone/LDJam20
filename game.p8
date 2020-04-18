@@ -28,3 +28,5 @@ function _draw()
    -- print("t: " .. t)
    character:draw(t)
 end
+
+
