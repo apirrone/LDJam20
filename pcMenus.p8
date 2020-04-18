@@ -1,6 +1,11 @@
-DESKTOP_MENU_ID = 0
-SETTINGS_MENU_ID = 8
+DESKTOP_MENU_ID    = 0
+FILES_MENU_ID      = 1
+BROWSER_MENU_ID    = 2
+AVAST_MENU_ID      = 3
+MONITORING_MENU_ID = 4
+SETTINGS_MENU_ID   = 5
 
+-- ============================================================================================
 
 Icon = {}
 function Icon:new(index, x, y, spriteId, spacing)
@@ -23,7 +28,7 @@ function Icon:draw()
    spr(self.spriteId, self.pos.x, self.pos.y, 1, 1)
 end
 
-
+-- ============================================================================================
 
 Cursor = {}
 
@@ -43,9 +48,10 @@ end
 
 
 function Cursor:draw()
-   
+
    tmpX = self.pos.x*self.spacing+10
    tmpY = self.pos.y*self.spacing+10
+
    
    pset(tmpX, tmpY, 8)
    pset(tmpX+1, tmpY, 8)
@@ -76,6 +82,7 @@ function Cursor:draw()
 end
 
 
+-- ============================================================================================
 
 
 DesktopMenu = {}
@@ -88,18 +95,20 @@ function DesktopMenu:new()
    
    desktopMenu.icons = {}
 
-   spacing = 15
+   desktopMenu.spacing = 15
    
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 0, 192, spacing))
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 0, 193, spacing))
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 2, 0, 194, spacing))
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 1, 198, spacing))
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 1, 199, spacing))
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 2, 1, 200, spacing))
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 2, 201, spacing))
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 2, 203, spacing))
+   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 0, 192, desktopMenu.spacing)) -- Files
+   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 0, 194, desktopMenu.spacing)) -- Browser
+   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 2, 0, 202, desktopMenu.spacing)) -- Avast
+   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 1, 203, desktopMenu.spacing)) -- Settings
 
-   desktopMenu.cursor = Cursor:new(0, 0, spacing)
+   
+   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 0, 193, spacing))
+   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 1, 198, spacing))
+   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 1, 199, spacing))
+   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 2, 1, 200, spacing))
+
+   desktopMenu.cursor = Cursor:new(0, 0, desktopMenu.spacing)
 
    
    return desktopMenu
@@ -166,8 +175,12 @@ function DesktopMenu:isValidPos(x, y)
    return retVal
 end
 
+
+-- ============================================================================================
+
+
 Setting = {}
-function Setting:new(text, iconIndex, status, spacing)
+function Setting:new(text, iconIndex, status, spacing, togglable)
    local setting = setmetatable({}, { __index = Setting})
 
    setting.text = text
@@ -178,64 +191,50 @@ function Setting:new(text, iconIndex, status, spacing)
    
    setting.pos = {}
    setting.pos.x = 0*setting.spacing+8
-   setting.pos.y = setting.iconIndex*setting.spacing+2
+   setting.pos.y = setting.iconIndex*setting.spacing+12
+
+   setting.togglable = togglable
    
    return setting
 end
 
 function Setting:draw()
    print(self.text, self.pos.x, self.pos.y, 9)
-   -- spr(self.spriteId, self.pos.x, self.pos.y, 1, 1)
-   
 end
 
 
+-- ============================================================================================
 
 
 
 SettingsMenu = {}
 
-function SettingsMenu:new()
+function SettingsMenu:new(id)
    local settingsMenu = setmetatable({}, { __index = SettingsMenu})
 
-   settingsMenu.id = SETTINGS_MENU_ID
-
+   settingsMenu.id = id
+   
    
    settingsMenu.settings = {}
 
    settingsMenu.icons = {}
 
-   spacing = 10
+   settingsMenu.spacing = 10
 
-   
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 1, 205, spacing))
-   add(settingsMenu.settings, Setting:new("internet status", #settingsMenu.icons+1, true, spacing))
-   
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 2, 205, spacing))
-   add(settingsMenu.settings, Setting:new("hard drive status", #settingsMenu.icons+1, true, spacing))
-   
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 3, 205, spacing))
-   add(settingsMenu.settings, Setting:new("ver num", #settingsMenu.icons+1, true, spacing))
-   
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 4, 205, spacing))
-   add(settingsMenu.settings, Setting:new("azeaze", #settingsMenu.icons+1, true, spacing))
-   
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 5, 205, spacing))
-   add(settingsMenu.settings, Setting:new("azeaze", #settingsMenu.icons+1, true, spacing))
-
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 6, 205, spacing))
-   add(settingsMenu.settings, Setting:new("azeaze", #settingsMenu.icons+1, true, spacing))
-   
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 7, 205, spacing))
-   add(settingsMenu.settings, Setting:new("azeaze", #settingsMenu.icons+1, true, spacing))
-
-   add(settingsMenu.icons, Icon:new(#settingsMenu.icons+1, 10, 8, 205, spacing))
-   add(settingsMenu.settings, Setting:new("azeaze", #settingsMenu.icons+1, true, spacing))
-
-   settingsMenu.cursor = Cursor:new(10, 1, spacing)
+   settingsMenu.cursor = Cursor:new(10, 1, settingsMenu.spacing)
    
    return settingsMenu
    
+end
+
+function SettingsMenu:addSetting(text, status, togglable)
+   if status then
+      add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 205, self.spacing))
+   else
+      add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 204, self.spacing))
+   end
+   
+   add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable))
 end
 
 function SettingsMenu:update()
@@ -262,15 +261,18 @@ function SettingsMenu:update()
 
 	    for vv in all(self.settings) do
 	       if vv.iconIndex == v.index then
-		  vv.status = not vv.status
+		  if vv.togglable then
+		     vv.status = not vv.status
+		     	    
+		     if v.spriteId == 204 then
+			v.spriteId = 205
+		     else
+			v.spriteId = 204
+		     end
+		  end
 	       end
 	    end
-	    
-	    if v.spriteId == 204 then
-	       v.spriteId = 205
-	    else
-	       v.spriteId = 204
-	    end
+
 	 end
       end
    end
@@ -295,9 +297,10 @@ function SettingsMenu:draw()
       v:draw()
    end
    
-   self.cursor:draw()
    
    rectfill(6, 109, 121, 121, 5)
+   
+   self.cursor:draw()
    
    print("toggle : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
@@ -316,3 +319,5 @@ function SettingsMenu:isValidPos(x, y)
 
    return retVal
 end
+
+-- ============================================================================================

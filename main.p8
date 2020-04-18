@@ -55,10 +55,6 @@ function _update60()
       currentView = pcView
    end
    -- ===============================
-
-   -- if (btnp(5)) then -- X
-   --    currentView = mapView
-   -- end
    
    currentView:update()
 
