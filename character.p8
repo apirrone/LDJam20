@@ -90,13 +90,12 @@ function Character:move(x, y)
    new_x = self.pos.x + x
    new_y = self.pos.y + y
 
+   hitbox_x = { x0 = new_x +1 , y0 = self.pos.y + 13, x1 = new_x + 7, y1 = self.pos.y + 15}
+   hitbox_y = { x0 = self.pos.x +1 , y0 = new_y + 13, x1 = self.pos.x + 7, y1 = new_y + 15}
 
-   hitbox = { x0 = new_x +1 , y0 = new_y + 13, x1 = new_x + 7, y1 = new_y + 15}
+   if not(collide_wall(hitbox_x)) then self.pos.x += x end
+   if not(collide_wall(hitbox_y)) then self.pos.y += y end
 
-   if not(collide_wall(hitbox)) then
-      self.pos.x += x
-      self.pos.y += y
-   end
 end
 
 function Character:setPos(x, y)
