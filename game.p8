@@ -2,10 +2,10 @@ pico-8 cartridge // http://www.pico-8.com
 version 20
 __lua__
 
+#include drawable.p8
 #include character.p8
 #include animation.p8
 #include main.p8
-
 
 __gfx__
 bb4444bbbbbbbbbbbb4444bbbb4444bbbb4444bbbbbbbbbbbb4444bbbb4444bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
