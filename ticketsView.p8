@@ -117,6 +117,7 @@ function TicketsView:draw(t)
 	 end
       end
       
+      print("browse : \148 \131", 6, 118, 15)
       print("go back : \139", 76, 118, 15)
    end
 
