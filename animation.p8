@@ -9,13 +9,10 @@ function Animation:new(cycleSize, startPos, spriteSize, speed, flip)
    animation.speed = speed
    animation.flip = flip
 
-   
    animation.currentPos = 0
    animation.freeze = false
    return animation
 end
-
-
 
 function Animation:draw(pos, t)
    if (self.freeze) then

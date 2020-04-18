@@ -8,7 +8,7 @@ __lua__
 dt = null
 t = 0
 function _init()
-   character = Character:new(10, 10, 1, 2, 2)
+   character = Character:new(10, 10, 1, 2, 1)
 end
 
 function _update60()
@@ -28,5 +28,3 @@ function _draw()
    -- print("t: " .. t)
    character:draw(t)
 end
-
-
