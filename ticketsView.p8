@@ -1,11 +1,18 @@
+rowHeight = 15
+
 Ticket = {}
 
-function Ticket:new(text)
+function Ticket:new(text, index)
    local ticket = setmetatable({}, { __index = Ticket})
 
    ticket.text = text
+   ticket.index = index
    
    return ticket
+end
+
+function Ticket:draw()
+   print(self.text, 6, rowHeight*self.index + 9)
 end
 
 
@@ -19,10 +26,10 @@ function Selector:new(pos)
    local selector = setmetatable({}, { __index = Selector})
 
    selector.pos      = pos
-   selector.h        = 15
-   selector.w        = 119
-   selector.x_offset = 4
-   selector.y_offset = 4
+   selector.h        = rowHeight
+   selector.w        = 121
+   selector.x_offset = 3
+   selector.y_offset = 3
    
    return selector
 end
@@ -40,15 +47,21 @@ TicketsView = {}
 released = true
 function TicketsView:new()
    local ticketsView = setmetatable({}, { __index = TicketsView})
-
+   
    ticketsView.tickets = {}
    ticketsView.selector = Selector:new(0)
 
    return ticketsView
 end
 
-function TicketsView:addTicket(ticket)
+function TicketsView:addTicket(text)
+   ticket = Ticket:new(text, #(self.tickets))
    add(self.tickets, ticket)
+end
+
+function TicketsView:removeTicket(index)
+   del(self.tickets, index)
+   -- TODO décaler les ids suivants vers la gauche
 end
 
 function TicketsView:update()
@@ -59,7 +72,7 @@ function TicketsView:update()
       end
       released = false
    elseif (btn(⬇️)) then
-      if (self.selector.pos < 7 and released) then
+      if (self.selector.pos < #self.tickets-1 and released) then
 	 self.selector.pos += 1
       end
       released = false
@@ -74,6 +87,12 @@ function TicketsView:draw(t)
    rect(1, 1, 126, 126, 5)
    rect(2, 2, 125, 125, 15)
 
+
+   for t in all(self.tickets) do
+      t:draw()
+   end
+   
    self.selector:draw()
+
 end
 

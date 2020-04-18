@@ -9,10 +9,15 @@ function _init()
 
    mapView = MapView:new(Character:new(10, 10, 1, 2, 1))
    ticketsView = TicketsView:new()
-   ticketsView:addTicket(Ticket:new("Bonjour, mon pc il est cassé"))
+   ticketsView:addTicket("bonjour, mon pc il est dead")
+   ticketsView:addTicket("bonjour, mon pc il est dead")
+   ticketsView:addTicket("bonjour, mon pc il est dead")
+   ticketsView:addTicket("bonjour, mon pc il est dead")
+   ticketsView:addTicket("bonjour, mon pc il est dead")
+   ticketsView:addTicket("bonjour, mon pc il est dead")
    
-   -- currentView = ticketsView
-   currentView = mapView
+   currentView = ticketsView
+   -- currentView = mapView
    palt(11, true)
 
 end
