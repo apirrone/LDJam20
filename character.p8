@@ -31,13 +31,18 @@ function Character:new(x, y, w, h, speed)
    return character
 end
 
+function is_wall(x,y)
+   return fget(mget(x,y), 7)
+end
 
-function Character:collide_wall(x,y)
-   grid_x = flr(x/8)
-   grid_y = flr(y/8)
+function collide_wall(hitbox)
+   x0 = flr(hitbox.x0/8)
+   y0 = flr(hitbox.y0/8)
+   x1 = flr(hitbox.x1/8)
+   y1 = flr(hitbox.y1/8)
 
 
-   return (fget(mget(grid_x,grid_y), 7))
+   return is_wall(x0,y0) or is_wall(x0, y1) or is_wall(x1,y0) or is_wall(x1,y1)
 end
 
 function Character:update()
@@ -82,13 +87,13 @@ function Character:update()
 end
 
 function Character:move(x, y)
-   check_x = self.pos.x + x
-   check_y = self.pos.y + y
+   new_x = self.pos.x + x
+   new_y = self.pos.y + y
 
-   if (x > 0) check_x += 8 // Check of the right if going right
-   check_y += 14 // We only check the foot
 
-   if not(self:collide_wall(check_x, check_y)) then
+   hitbox = { x0 = new_x +1 , y0 = new_y + 13, x1 = new_x + 7, y1 = new_y + 15}
+
+   if not(collide_wall(hitbox)) then
       self.pos.x += x
       self.pos.y += y
    end
@@ -102,4 +107,8 @@ end
 
 function Character:draw(t)
    self.currentAnimation:draw(self.pos, t)
+
+   -- DEBUG
+   hitbox = { x0 = new_x +1 , y0 = new_y + 13, x1 = new_x + 7, y1 = new_y + 15}
+   rect(hitbox.x0, hitbox.y0, hitbox.x1, hitbox.y1)
 end
