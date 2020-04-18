@@ -25,10 +25,6 @@ function _init()
 
    pcView = PcView:new()
    
-   
-   -- currentView = ticketsView
-   -- currentView = mapView
-   -- currentView = pcView
    palt(11, true)
 
 end
@@ -70,6 +66,6 @@ function _update60()
 end
 
 function _draw()
-   -- cls()
+   cls()
    currentView:draw(t)
 end

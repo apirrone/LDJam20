@@ -64,11 +64,9 @@ function Cursor:draw()
    pset(tmpX+6, tmpY+7, 8)
    pset(tmpX+5, tmpY+7, 8)
    pset(tmpX+7, tmpY+6, 8)
-   pset(tmpX+7, tmpY+5, 8)
-   
+   pset(tmpX+7, tmpY+5, 8)   
    
 end
-
 
 
 PcView = {}
@@ -78,15 +76,21 @@ function PcView:new()
 
    pcView.icons = {}
 
-   add(pcView.icons, Icon:new(#pcView.icons, 0, 0, 192))
-   add(pcView.icons, Icon:new(#pcView.icons, 1, 0, 193))
-   add(pcView.icons, Icon:new(#pcView.icons, 2, 0, 194))
-   add(pcView.icons, Icon:new(#pcView.icons, 0, 1, 198))
-   add(pcView.icons, Icon:new(#pcView.icons, 1, 1, 199))
-   add(pcView.icons, Icon:new(#pcView.icons, 2, 1, 200))
-   add(pcView.icons, Icon:new(#pcView.icons, 0, 2, 201))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 0, 0, 192))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 1, 0, 193))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 2, 0, 194))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 0, 1, 198))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 1, 1, 199))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 2, 1, 200))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 0, 2, 201))
 
    pcView.cursor = Cursor:new(0, 0)
+
+   -- 0 : desktop
+   -- 1 : fichiers
+   -- 5 : settings
+   -- ?????
+   pcView.displayState = 0 
    
    return pcView
 end
@@ -104,6 +108,7 @@ function PcView:isValidPos(x, y)
 end
 
 function PcView:update()
+   
    newPos = {}
    newPos.x = pcView.cursor.pos.x
    newPos.y = pcView.cursor.pos.y
@@ -126,7 +131,6 @@ function PcView:update()
       pcView.cursor.pos = newPos
       self.cursor.currentIndex = tmpIndex
    end
-   
    
 end
 
