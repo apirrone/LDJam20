@@ -1,9 +1,12 @@
 pico-8 cartridge // http://www.pico-8.com
-version 18
+version 21
 __lua__
 
 #include character.p8
 #include animation.p8
+#include view.p8
+#include ticketsView.p8
+#include mapView.p8
 
 #include main.p8
 __gfx__

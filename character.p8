@@ -26,7 +26,7 @@ function Character:new(x, y, w, h, speed)
    return character
 end
 
-function Character:handleInputs()
+function Character:update()
    
    local move_x = 0
    local move_y = 0
@@ -44,15 +44,15 @@ function Character:handleInputs()
    end
 
    if (move_x != 0 or move_y != 0) then
-      character.currentAnimation.freeze = false
+      self.currentAnimation.freeze = false
    end
    
    if (move_x < 0) then
-      character.currentAnimation = character.animations.walkLeftAnimation
+      self.currentAnimation = self.animations.walkLeftAnimation
    elseif (move_x > 0) then
-      character.currentAnimation = character.animations.walkRightAnimation
+      self.currentAnimation = self.animations.walkRightAnimation
    elseif (move_y == 0) then
-      character.currentAnimation.freeze = true
+      self.currentAnimation.freeze = true
    end
    
    self:move(move_x, move_y)
