@@ -1,16 +1,11 @@
 
-Character = {}
+Character = Drawable:new()
 
 function Character:new(x, y, w, h, speed)
-   local character = setmetatable({}, { __index = Character })
 
-   character.pos = {}
-   character.pos.x = x
-   character.pos.y = y
-
-   character.size = {}
-   character.size.w = w
-   character.size.h = h
+   local character = Drawable:new(x,y,w,h)
+   self.__index = self
+   setmetatable(character, self)
 
    character.speed = speed
 
@@ -27,16 +22,16 @@ function Character:new(x, y, w, h, speed)
 end
 
 function Character:update()
-   
+
    local move_x = 0
    local move_y = 0
-   
+
    if (btn(⬅️)) then
       move_x = -self.speed
    elseif (btn(➡️)) then
-      move_x = self.speed      
+      move_x = self.speed
    end
-   
+
    if (btn(⬆️)) then
       move_y = -self.speed
    elseif (btn(⬇️)) then
@@ -46,7 +41,7 @@ function Character:update()
    if (move_x != 0 or move_y != 0) then
       self.currentAnimation.freeze = false
    end
-   
+
    if (move_x < 0) then
       self.currentAnimation = self.animations.walkLeftAnimation
    elseif (move_x > 0) then
@@ -54,7 +49,7 @@ function Character:update()
    elseif (move_y == 0) then
       self.currentAnimation.freeze = true
    end
-   
+
    self:move(move_x, move_y)
 end
 
