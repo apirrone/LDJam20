@@ -49,7 +49,6 @@ end
 -- =================================================================
 
 TicketsView = {}
-released = true
 function TicketsView:new()
    local ticketsView = setmetatable({}, { __index = TicketsView})
    
@@ -71,23 +70,19 @@ end
 
 function TicketsView:update()
    
-   if (btn(⬆️)) then
-      if (self.selector.pos > 0 and released) then
+   if (btnp(⬆️)) then
+      if (self.selector.pos > 0) then
 	 self.selector.pos -= 1
       end
-      released = false
-   elseif (btn(⬇️)) then
-      if (self.selector.pos < #self.tickets-1 and released) then
+   elseif (btnp(⬇️)) then
+      if (self.selector.pos < #self.tickets-1) then
 	 self.selector.pos += 1
       end
-      released = false
-   else
-      released = true
    end
 
-   if (btn(⬅️)) then -- show full message
+   if (btnp(⬅️)) then -- show full message
       self.displayState = 0      
-   elseif (btn(➡️)) then
+   elseif (btnp(➡️)) then
       self.displayState = 1
    end
    

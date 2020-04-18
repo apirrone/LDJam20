@@ -61,24 +61,7 @@ function Character:update()
       self.currentAnimation = self.animations.walkUpRightAnimation
    elseif (move_y == 0) then
       self.currentAnimation.freeze = true
-
    end
-
-
-
-
-      
-   -- if (move_x < 0) then
-   --    self.currentAnimation = self.animations.walkLeftAnimation
-   -- elseif (move_x > 0) then
-   --    self.currentAnimation = self.animations.walkRightAnimation
-   -- elseif (move_y < 0) then
-   --    self.currentAnimation = self.animations.walkUpAnimation
-   -- elseif (move_y > 0) then
-   --    self.currentAnimation = self.animations.walkRightAnimation
-   -- elseif (move_y == 0) then
-   --    self.currentAnimation.freeze = true
-   -- end
 
    self:move(move_x, move_y)
 end

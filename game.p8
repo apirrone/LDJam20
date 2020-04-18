@@ -1,6 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
 version 21
-
 __lua__
 
 #include drawable.p8
@@ -8,6 +7,7 @@ __lua__
 #include animation.p8
 #include ticketsView.p8
 #include mapView.p8
+#include pcView.p8
 #include main.p8
 
 __gfx__
