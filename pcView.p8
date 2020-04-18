@@ -84,19 +84,25 @@ function PcView:new()
    add(pcView.icons, Icon:new(#pcView.icons+1, 1, 1, 199))
    add(pcView.icons, Icon:new(#pcView.icons+1, 2, 1, 200))
    add(pcView.icons, Icon:new(#pcView.icons+1, 0, 2, 201))
+   add(pcView.icons, Icon:new(#pcView.icons+1, 1, 2, 195))
 
    pcView.cursor = Cursor:new(0, 0)
 
    -- 0 : desktop
    -- 1 : fichiers
-   -- 5 : settings
+   -- 8 : settings
    -- ?????
    pcView.displayState = 0 
 
-
    pcView.settings = {}
    pcView.settings.internet = true
-   -- pcView.settings.internet = true
+   pcView.settings.hard_drive = true
+   pcView.settings.cpu = true
+   pcView.settings.vernum = true
+   pcView.settings.keyboard_layout_qwerty = true
+   pcView.settings.inverted_screen = true
+
+   
    
 
 
