@@ -14,7 +14,7 @@ nbViews = 3
 function _init()
 
    mapView = MapView:new(Character:new(60, 60, 1, 2, 1))
-   
+
    ticketsView = TicketsView:new()
    ticketId = ticketsView:addTicket("1 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline")
    -- ticketsView:addTicket("2 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
@@ -24,13 +24,13 @@ function _init()
    -- ticketsView:addTicket("6 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
 
    pcView = PcView:new(ticketId)
-   
+
    palt(11, true)
 
 end
 
 function _update60()
-   
+
 
    if(dt == null) then
       local target_fps = stat(8)
@@ -39,12 +39,13 @@ function _update60()
 
    t += flr(dt*1000)
 
-   
+
 
    -- ===============================
    -- change view test
    if (btnp(4)) then -- C
-      viewCycle = (viewCycle+1)%nbViews
+	  viewCycle = (viewCycle+1)%nbViews
+	  camera(0,0)
    end
 
    if viewCycle == 0 then
@@ -59,7 +60,7 @@ function _update60()
    -- if (btnp(5)) then -- X
    --    currentView = mapView
    -- end
-   
+
    currentView:update()
 
 
