@@ -16,14 +16,14 @@ function _init()
    mapView = MapView:new(Character:new(60, 60, 1, 2, 1))
    
    ticketsView = TicketsView:new()
-   ticketsView:addTicket("1 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline")
-   ticketsView:addTicket("2 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
-   ticketsView:addTicket("3 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
-   ticketsView:addTicket("4 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
-   ticketsView:addTicket("5 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
-   ticketsView:addTicket("6 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   ticketId = ticketsView:addTicket("1 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline")
+   -- ticketsView:addTicket("2 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   -- ticketsView:addTicket("3 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   -- ticketsView:addTicket("4 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   -- ticketsView:addTicket("5 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
+   -- ticketsView:addTicket("6 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
 
-   pcView = PcView:new()
+   pcView = PcView:new(ticketId)
    
    palt(11, true)
 

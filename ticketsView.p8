@@ -59,8 +59,10 @@ function TicketsView:new()
 end
 
 function TicketsView:addTicket(text)
-   ticket = Ticket:new(text, #(self.tickets))
+   id = #(self.tickets)
+   ticket = Ticket:new(text, id)
    add(self.tickets, ticket)
+   return id
 end
 
 function TicketsView:removeTicket(index)

@@ -1,8 +1,10 @@
 PcView = {}
 
-function PcView:new()
+function PcView:new(ticketId)
    local pcView = setmetatable({}, { __index = PcView})
 
+   pcView.ticketId = ticketId
+   
    pcView.menus = {}
    add(pcView.menus, DesktopMenu:new())
    add(pcView.menus, SettingsMenu:new())
