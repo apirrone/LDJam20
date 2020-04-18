@@ -11,8 +11,10 @@ function _init()
    ticketsView = TicketsView:new()
    ticketsView:addTicket(Ticket:new("Bonjour, mon pc il est cassé"))
    
-   currentView = ticketsView
-   -- currentView = views.mainView
+   -- currentView = ticketsView
+   currentView = mapView
+   palt(11, true)
+
 end
 
 function _update60()

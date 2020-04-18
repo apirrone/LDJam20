@@ -6,7 +6,6 @@ __lua__
 #include drawable.p8
 #include character.p8
 #include animation.p8
-#include view.p8
 #include ticketsView.p8
 #include mapView.p8
 #include main.p8
