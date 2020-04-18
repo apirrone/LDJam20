@@ -24,9 +24,9 @@ function Character:handleInputs()
    if (btn(⬅️)) then
       move_x = -self.speed
    elseif (btn(➡️)) then
-      move_x = self.speed
-      
+      move_x = self.speed      
    end
+   
    if (btn(⬆️)) then
       move_y = -self.speed
    elseif (btn(⬇️)) then

@@ -9,9 +9,7 @@ function _init()
 end
 
 function _update()
-   character:handleInputs()
-
-   
+   character:handleInputs()   
 end
 
 function _draw()
