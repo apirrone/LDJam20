@@ -15,10 +15,13 @@ function Character:new(x, y, w, h, speed)
    character.speed = speed
 
    character.animations = {}
-   character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20, false)
+   
+   character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20, false)   
+   character.animations.walkRightAnimation:setCycle(3, {0, 2, 3})
+   
    character.animations.walkLeftAnimation = Animation:new(4, 0, character.size, 20, true)
-   character.animations.idleAnimationRight = Animation:new(1, 0, character.size, 20, false)
-   character.animations.idleAnimationLeft = Animation:new(1, 0, character.size, 20, true)
+   character.animations.walkLeftAnimation:setCycle(3, {0, 2, 3})
+   
    character.currentAnimation = character.animations.walkRightAnimation
    return character
 end
