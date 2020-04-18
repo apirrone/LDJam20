@@ -5,8 +5,8 @@ function Icon:new(index, x, y, spriteId)
    icon.index = index
    
    icon.pos = {}
-   icon.pos.x = x
-   icon.pos.y = y
+   icon.pos.x = x*40+10
+   icon.pos.y = y*40+10
 
    icon.spriteId = spriteId
    return icon
@@ -25,40 +25,46 @@ function Cursor:new(x, y)
    local cursor = setmetatable({}, { __index = Cursor})
    
    cursor.pos = {}
-   cursor.pos.x = x, y
-   cursor.pos.y = 10
+   cursor.pos.x = x
+   cursor.pos.y = y
+
+   currentIndex = 0
    
    return cursor
 
 end
 
+
 function Cursor:draw()
 
-   pset(self.pos.x, self.pos.y, 8)
-   pset(self.pos.x+1, self.pos.y, 8)
-   pset(self.pos.x+2, self.pos.y, 8)
-   pset(self.pos.x, self.pos.y+1, 8)
-   pset(self.pos.x, self.pos.y+2, 8)
+   tmpX = self.pos.x*40+10
+   tmpY = self.pos.y*40+10
    
-   pset(self.pos.x+7, self.pos.y, 8)
-   pset(self.pos.x+6, self.pos.y, 8)   
-   pset(self.pos.x+5, self.pos.y, 8)
-   pset(self.pos.x+7, self.pos.y+1, 8)
-   pset(self.pos.x+7, self.pos.y+2, 8)
+   pset(tmpX, tmpY, 8)
+   pset(tmpX+1, tmpY, 8)
+   pset(tmpX+2, tmpY, 8)
+   pset(tmpX, tmpY+1, 8)
+   pset(tmpX, tmpY+2, 8)
+   
+   pset(tmpX+7, tmpY, 8)
+   pset(tmpX+6, tmpY, 8)   
+   pset(tmpX+5, tmpY, 8)
+   pset(tmpX+7, tmpY+1, 8)
+   pset(tmpX+7, tmpY+2, 8)
 
    
-   pset(self.pos.x, self.pos.y+7, 8)
-   pset(self.pos.x, self.pos.y+6, 8)
-   pset(self.pos.x, self.pos.y+5, 8)
-   pset(self.pos.x+1, self.pos.y+7, 8)
-   pset(self.pos.x+2, self.pos.y+7, 8)
+   pset(tmpX, tmpY+7, 8)
+   pset(tmpX, tmpY+6, 8)
+   pset(tmpX, tmpY+5, 8)
+   pset(tmpX+1, tmpY+7, 8)
+   pset(tmpX+2, tmpY+7, 8)
 
    
-   pset(self.pos.x+7, self.pos.y+7, 8)
-   pset(self.pos.x+6, self.pos.y+7, 8)
-   pset(self.pos.x+5, self.pos.y+7, 8)
-   pset(self.pos.x+7, self.pos.y+6, 8)
-   pset(self.pos.x+7, self.pos.y+5, 8)
+   pset(tmpX+7, tmpY+7, 8)
+   pset(tmpX+6, tmpY+7, 8)
+   pset(tmpX+5, tmpY+7, 8)
+   pset(tmpX+7, tmpY+6, 8)
+   pset(tmpX+7, tmpY+5, 8)
    
    
 end
@@ -72,30 +78,54 @@ function PcView:new()
 
    pcView.icons = {}
 
-   add(pcView.icons, Icon:new(#pcView.icons, 10, 10, 145))
-   add(pcView.icons, Icon:new(#pcView.icons, 40, 40, 145))
+   add(pcView.icons, Icon:new(#pcView.icons, 0, 0, 192))
+   add(pcView.icons, Icon:new(#pcView.icons, 1, 0, 193))
+   add(pcView.icons, Icon:new(#pcView.icons, 2, 0, 194))
+   add(pcView.icons, Icon:new(#pcView.icons, 0, 1, 198))
+   add(pcView.icons, Icon:new(#pcView.icons, 1, 1, 199))
+   add(pcView.icons, Icon:new(#pcView.icons, 2, 1, 200))
+   add(pcView.icons, Icon:new(#pcView.icons, 0, 2, 201))
 
-   pcView.cursor = Cursor:new(10, 10)
+   pcView.cursor = Cursor:new(0, 0)
    
    return pcView
 end
 
+function PcView:isValidPos(x, y)
+   
+   retVal = false
+   for v in all(self.icons) do
+      if v.pos.x == (x*40+10) and v.pos.y == (y*40+10) then
+	 retVal = v.index
+      end
+   end
+
+   return retVal
+end
 
 function PcView:update()
+   newPos = {}
+   newPos.x = pcView.cursor.pos.x
+   newPos.y = pcView.cursor.pos.y
    
-   -- if (btn(⬆️)) then
+   if (btnp(⬆️)) then
+      newPos.y -= 1
+   elseif (btnp(⬇️)) then
+      newPos.y += 1
+   end
 
-   -- elseif (btn(⬇️)) then
+   if (btnp(⬅️)) then
+      newPos.x -= 1
+   elseif (btnp(➡️)) then
+      newPos.x += 1
+   end
 
-   -- else
-      
-   -- end
-
-   -- if (btn(⬅️)) then
-
-   -- elseif (btn(➡️)) then
-
-   -- end
+   
+   tmpIndex = self:isValidPos(newPos.x, newPos.y)
+   if tmpIndex then
+      pcView.cursor.pos = newPos
+      self.cursor.currentIndex = tmpIndex
+   end
    
    
 end
@@ -112,22 +142,13 @@ function PcView:draw(t)
    for v in all(self.icons) do
       v:draw()
    end
-      
-   
-   -- spr(145, 10, 10, 1, 1)
-   -- spr(145, 40, 10, 1, 1)
-   -- spr(145, 70, 10, 1, 1)
-   -- spr(145, 10, 30, 1, 1)
-   -- spr(145, 40, 30, 1, 1)
-   -- spr(145, 70, 30, 1, 1)
-
    
    rectfill(6, 114, 121, 121, 5)
 
    print("lucarne 98", 82, 108, 2)
 
    self.cursor:draw()
-   
+   print(self.cursor.currentIndex, 0, 0)
    
 end
 

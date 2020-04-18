@@ -70,6 +70,6 @@ function _update60()
 end
 
 function _draw()
-   cls()
+   -- cls()
    currentView:draw(t)
 end
