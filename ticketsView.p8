@@ -103,7 +103,8 @@ function TicketsView:draw(t)
    
       self.selector:draw()
       
-      print("see full ticket : \145", 44, 118, 15)
+      print("full ticket : \145", 5, 118, 15)
+      print("exit : \142", 88, 118, 15)
    else
 
       for t in all(self.tickets) do
@@ -112,7 +113,7 @@ function TicketsView:draw(t)
 	 end
       end
       
-      print("browse : \148 \131", 6, 118, 15)
+      print("browse : \148\131", 6, 118, 15)
       print("go back : \139", 76, 118, 15)
    end
 
