@@ -1,3 +1,4 @@
+
 Icon = {}
 function Icon:new(index, x, y, spriteId)
    local icon = setmetatable({}, { __index = Icon})
@@ -73,7 +74,7 @@ PcView = {}
 
 function PcView:new()
    local pcView = setmetatable({}, { __index = PcView})
-
+   
    pcView.icons = {}
 
    add(pcView.icons, Icon:new(#pcView.icons+1, 0, 0, 192))
@@ -91,6 +92,14 @@ function PcView:new()
    -- 5 : settings
    -- ?????
    pcView.displayState = 0 
+
+
+   pcView.settings = {}
+   pcView.settings.internet = true
+   -- pcView.settings.internet = true
+   
+
+
    
    return pcView
 end
