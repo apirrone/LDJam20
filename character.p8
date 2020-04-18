@@ -17,8 +17,6 @@ function Character:new(x, y, w, h, speed)
    character.animations = {}
    character.animations.walkRightAnimation = Animation:new(4, 0, character.size, 20, false)
    character.animations.walkLeftAnimation = Animation:new(4, 0, character.size, 20, true)
-   character.animations.idleAnimationRight = Animation:new(1, 0, character.size, 20, false)
-   character.animations.idleAnimationLeft = Animation:new(1, 0, character.size, 20, true)
    character.currentAnimation = character.animations.walkRightAnimation
    return character
 end
