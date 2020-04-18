@@ -100,7 +100,8 @@ function DesktopMenu:new()
    add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 0, 192, desktopMenu.spacing)) -- Files
    add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 0, 194, desktopMenu.spacing)) -- Browser
    add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 2, 0, 202, desktopMenu.spacing)) -- Avast
-   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 1, 203, desktopMenu.spacing)) -- Settings
+   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 1, 203, desktopMenu.spacing)) -- Monitoring
+   add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 1, 206, desktopMenu.spacing)) -- Settings
 
    
    -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 0, 193, spacing))
@@ -287,7 +288,7 @@ function SettingsMenu:update()
 end
 
 function SettingsMenu:draw()
-   print("settings", 8, 8)
+   -- print("settings", 8, 8)
    
    for v in all(self.icons) do
       v:draw()

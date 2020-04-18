@@ -10,15 +10,21 @@ function PcView:new(ticketId)
 
    issues = generateIssues(1)
 
-   monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID) -- TODO ID
+   monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
    monitoringMenu:addSetting("internet status", true, false)
    monitoringMenu:addSetting("hard drive status", true, false)
    monitoringMenu:addSetting("ver num", true, false)
    add(pcView.menus, monitoringMenu)
 
-   -- settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID) -- TODO ID
-   -- settingsMenu:addSetting("internet status", true, false)
-   -- add(pcView.menus, settingsMenu)
+   settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID)
+   settingsMenu:addSetting("enable mouse", true, true)
+   settingsMenu:addSetting("enable internet", true, true)
+   settingsMenu:addSetting("enable printing", true, true)
+   settingsMenu:addSetting("enable register 0x587", true, true)
+   settingsMenu:addSetting("enable register 0x473", true, true)
+   settingsMenu:addSetting("enable register 0x100", true, true)
+   settingsMenu:addSetting("enable register 0x742", true, true)
+   add(pcView.menus, settingsMenu)
 
    i = 0
    for v in all(pcView.menus) do
