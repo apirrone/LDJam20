@@ -43,10 +43,10 @@ function _update60()
 
    -- ===============================
    -- change view test
-   if (btnp(4)) then -- C
-	  viewCycle = (viewCycle+1)%nbViews
-	  camera(0,0)
-   end
+   -- if (btnp(4)) then -- C
+   -- 	  viewCycle = (viewCycle+1)%nbViews
+   -- 	  camera(0,0)
+   -- end
 
    if viewCycle == 0 then
       currentView = mapView
@@ -57,7 +57,11 @@ function _update60()
    end
    -- ===============================
 
-   currentView:update()
+   return_value = currentView:update()
+
+   if return_value == -1 then
+      viewCycle = 0
+   end
 
 
 end

@@ -12,13 +12,16 @@ function PcView:new(ticketId, nbIssues)
 
    pcView.ticketId = ticketId
 
-
+   pcView.allOk = false
    issues = generateIssues(nbIssues)
+
    
    pcView.menus = {}
    add(pcView.menus, DesktopMenu:new(issues))
+
    
    pcView:generateMenus(issues)   
+   
    
    i = 0
    for v in all(pcView.menus) do
@@ -36,18 +39,32 @@ end
 function PcView:generateMenus(issues)
    
    monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
-
+   unpluggedKeyboard = false
+   unpluggedMouse    = false
+   unpluggedScreen   = false
    unpluggedEthernet = false
-   hardDriveFull = false
-   verNumDisabled = false
-   mouseDisabled = false
-   internetDisabled = false
-   printingDisabled = false
-   registerDisabled = false
+   hardDriveFull     = false
+   verNumDisabled    = false
+   mouseDisabled     = false
+   internetDisabled  = false
+   printingDisabled  = false
+   registerDisabled  = false
    
    i = 0
    for v in all(issues) do
       if v == 0 then
+	 if i == 0 then
+	    unpluggedKeyboard = true
+	 end
+	 
+	 if i == 1 then
+	    unpluggedMouse = true
+	 end
+	 
+	 if i == 2 then
+	    unpluggedScreen = true
+	 end
+	 
 	 if i == 3 then
 	    unpluggedEthernet = true
 	 end
@@ -67,8 +84,6 @@ function PcView:generateMenus(issues)
 	 if i == 7 then
 	    registerDisabled = true
 	 end
-
-	 
 	 
 	 if i == 9 then
 	    hardDriveFull = true
@@ -94,6 +109,14 @@ function PcView:generateMenus(issues)
    settingsMenu:addSetting("enable printing", not printingDisabled, true)
    settingsMenu:addSetting("enable register 0x587", not registerDisabled, true)
    add(self.menus, settingsMenu)
+
+   cablesMenu = CablesMenu:new()
+   cablesMenu:addSetting("unplugged keyboard", not unpluggedKeyboard, true)
+   cablesMenu:addSetting("unplugged mouse", not unpluggedMouse, true)
+   cablesMenu:addSetting("unplugged screen", not unpluggedScreen, true)
+   cablesMenu:addSetting("unplugged ethernet", not unpluggedEthernet, true)
+
+   add(self.menus, cablesMenu)
 end
 
 function PcView:setCurrentMenu(menuId)
@@ -108,8 +131,30 @@ end
    
 
 function PcView:update()
+   oldMenuId = self.currentMenu.id
+   menuId = self.currentMenu:update()
+   
+   if menuId == -1 then
+      return -1
+   end
+   
+   self:setCurrentMenu(menuId)
+   if oldMenuId != self.currentMenu.id then
 
-   self:setCurrentMenu(self.currentMenu:update())
+      self.allOk = true
+      for v in all(self.menus) do
+	 for vv in all(v.settings) do
+	    if not vv.status then
+	       self.allOk = false
+	    end
+
+	 end
+      end
+   end
+
+   return 1
+	 
+   
    
 end
 
@@ -123,6 +168,14 @@ function PcView:draw(t)
    rectfill(39, 124, 89, 125, 0)
 
    self.currentMenu:draw()
+
+   -- TODO DEBUG remove this ============
+   if self.allOk then
+      print("all is ok", 10, 100)
+   else
+      print("not all is ok", 10, 100)
+   end
+   -- ====================================
 
 end
 
