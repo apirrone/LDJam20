@@ -22,3 +22,11 @@ end
 function Drawable:drawrec(x,y)
 	rectfill(x,y,x + 50,y + 50, 4)
 end
+
+
+--------------------------------
+
+Sprite = Drawable:new()
+
+function Sprite:new(x,y,w,h, spr_idx)
+end
