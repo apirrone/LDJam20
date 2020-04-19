@@ -23,7 +23,7 @@ function _init()
    -- ticketsView:addTicket("5 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
    -- ticketsView:addTicket("6 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
 
-   pcView = PcView:new(ticketId)
+   pcView = PcView:new(ticketId, 2)
 
    palt(11, true)
 

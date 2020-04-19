@@ -1,6 +1,16 @@
+
+
+NB_PHYSICAL_ISSUES = 4
+NB_SETTINGS_ISSUES = 4
+NB_MONITORING_ISSUES = 3
+NB_BROWSER_ISSUES = 1
+NB_VIRUS_ISSUES = 2
+TOTAL_NB_ISSUES = NB_PHYSICAL_ISSUES * NB_SETTINGS_ISSUES * NB_MONITORING_ISSUES * NB_BROWSER_ISSUES * NB_VIRUS_ISSUES
+
+
 PcView = {}
 
-function PcView:new(ticketId)
+function PcView:new(ticketId, nbIssues)
    local pcView = setmetatable({}, { __index = PcView})
 
    pcView.ticketId = ticketId
@@ -8,24 +18,8 @@ function PcView:new(ticketId)
    pcView.menus = {}
    add(pcView.menus, DesktopMenu:new())
 
-   issues = generateIssues(1)
-
-   monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
-   monitoringMenu:addSetting("internet status", true, false)
-   monitoringMenu:addSetting("hard drive status", true, false)
-   monitoringMenu:addSetting("ver num status", true, false)
-   add(pcView.menus, monitoringMenu)
-
-   settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID)
-   settingsMenu:addSetting("enable mouse", true, true)
-   settingsMenu:addSetting("enable internet", true, true)
-   settingsMenu:addSetting("enable printing", true, true)
-   settingsMenu:addSetting("enable register 0x587", true, true)
-   -- settingsMenu:addSetting("enable register 0x473", true, true)
-   -- settingsMenu:addSetting("enable register 0x100", true, true)
-   -- settingsMenu:addSetting("enable register 0x742", true, true)
-   add(pcView.menus, settingsMenu)
-
+   pcView:generateMenus(nbIssues)   
+   
    i = 0
    for v in all(pcView.menus) do
 
@@ -37,6 +31,25 @@ function PcView:new(ticketId)
    end
    
    return pcView
+end
+
+function PcView:generateMenus(nbIssues)
+   
+   issues = generateIssues(nbIssues)
+   
+   monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
+   monitoringMenu:addSetting("internet status", true, false)
+   monitoringMenu:addSetting("hard drive status", true, false)
+   monitoringMenu:addSetting("ver num status", true, false)
+   add(self.menus, monitoringMenu)
+
+   settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID)
+   settingsMenu:addSetting("enable mouse", true, true)
+   settingsMenu:addSetting("enable internet", true, true)
+   settingsMenu:addSetting("enable printing", true, true)
+   settingsMenu:addSetting("enable register 0x587", true, true)
+
+   add(self.menus, settingsMenu)
 end
 
 function PcView:setCurrentMenu(menuId)
@@ -73,55 +86,40 @@ end
 
 function generateIssues(nbIssues)
    issues = {}
-   
-   issues.physical = {}
-   nb_physical_issues = 4
-   
-   issues.settings = {}
-   nb_settings_issues = 4
-   
-   issues.monitoring = {}
-   nb_monitoring_issues = 3
-   
-   issues.browser = {}
-   nb_browser_issues = 1
-   
-   issues.virus = {}
-   nb_virus_issues = 2
 
-   total_nb_issues = nb_physical_issues + nb_settings_issues + nb_monitoring_issues + nb_browser_issues + nb_virus_issues
+   -- | physical | settings | monitoring | browser | virus|
+   --   1 1 1 1    1 1 1 1       1 1 1        1       11
+   -- Physical   : unplugged keyboard, unplugged mouse, unplugged screen, unplugged ethernet cable
+   -- settings   : enable mouse, enable internet, enable printing, enable register
+   -- monitoring : no internet, hard drive full, ver.num
+   -- browser    : many toolbars
+   -- virus      : pron ads, ransomware
    
-   for i=0,nbIssues,1 do
-      
-      issueType = flr(rnd(5)) -- 0 : physical, 1 : settings, 2 : monitoring, 3: browser, 4 : virus
-      
-      if issueType == 0 then
-	 issue = flr(rnd(nb_physical_issues)) -- 0 : unplugged keyboard, 1 : unplugged mouse, 2 : unplugged screen, 3 : unplugged ethernet cable
-	 add(issues.physical, issue)
-      elseif issueType == 1 then
-	 issue = flr(rnd(nb_settings_issues)) -- 0 : enable mouse, 1 : enable internet, 2 : enable printing; 3 : enable register 
-	 add(issues.settings, issue)
-      elseif issueType == 2 then
-	 issue = flr(rnd(nb_monitoring_issues)) -- 0 : no internet, 1 : hard drive full, 2 : ver. num
-	 add(issues.settings, issue)
-      elseif issueType == 3 then
-	 add(issues.browser, 0) -- 0 : many toolbars
-      elseif issueType == 4 then
-	 issue = flr(rnd(nb_virus_issues)) -- 0 : pron ads, 1 : ransomware, 2 : ????
-	 add(issues.virus, issue)
-      end
-      
-   end
+
+   -- total_nb_issues = nb_physical_issues + nb_settings_issues + nb_monitoring_issues + nb_browser_issues + nb_virus_issues
 
    issues_str = ""
+   issuesIndex = {}
    
-   -- for i=0, total_nb_issues, 1 do
-      
-      
-   -- end
-
+   for i=0, nbIssues-1, 1 do
+      add(issuesIndex, flr(rnd(TOTAL_NB_ISSUES)))
+   end
    
+   for i=0, TOTAL_NB_ISSUES, 1 do
+      issue = false
+      for v in all(issuesIndex) do
+	 if i == v then
+	    issue = true
+	 end
+      end
+      if issue then
+	 issues_str = issues_str.."0"
+      else
+	 issues_str = issues_str.."1"
+      end
+   end
 
+   return issues_str
    
 end
  
