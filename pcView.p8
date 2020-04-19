@@ -168,14 +168,16 @@ function PcView:update()
 	 end
 	 i+=1
       end
-      printh(ethernetUnPlugged)
+
       i = 0
       for v in all(self.menus) do
-      	 if i == 2 then
+
+      	 if i == 3 then -- monitoringMenu
       	    j = 0
       	    for vv in all(v.settings) do
+
       	       if j == 0 then
-      		  -- vv.status = not ethernetUnPlugged -- TODO BUGGY
+      		  vv.status = not ethernetUnPlugged -- TODO BUGGY
       	       end
       	       j+=1
       	    end
@@ -185,14 +187,14 @@ function PcView:update()
 
 
       -- DEBUG
-      for v in all(reconstructedIssues) do
-      	 printh(v)
-      end
-      printh("-----------------------------")
-      for v in all(self.issues) do
-      	 printh(v)
-      end
-      printh("===========")
+      -- for v in all(reconstructedIssues) do
+      -- 	 printh(v)
+      -- end
+      -- printh("-----------------------------")
+      -- for v in all(self.issues) do
+      -- 	 printh(v)
+      -- end
+      -- printh("===========")
    end
 
    return 1
