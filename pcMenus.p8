@@ -253,7 +253,7 @@ end
 
 
 Setting = {}
-function Setting:new(text, iconIndex, status, spacing, togglable)
+function Setting:new(text, iconIndex, status, spacing, togglable, bgColor)
    local setting = setmetatable({}, { __index = Setting})
 
    setting.text = text
@@ -267,11 +267,14 @@ function Setting:new(text, iconIndex, status, spacing, togglable)
    setting.pos.y = setting.iconIndex*setting.spacing+12
 
    setting.togglable = togglable
-   
+   setting.bgColor = bgColor
    return setting
 end
 
 function Setting:draw()
+   if self.bgColor != -1 then
+      rectfill(self.pos.x-2, self.pos.y-2, 121, self.pos.y+8, self.bgColor)
+   end
    print(self.text, self.pos.x, self.pos.y, 9)
 end
 
@@ -307,7 +310,7 @@ function SettingsMenu:addSetting(text, status, togglable)
       add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 204, self.spacing))
    end
    
-   add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable))
+   add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable, -1))
 end
 
 function SettingsMenu:update(issues, t)
@@ -427,7 +430,7 @@ function CablesMenu:addSetting(text, status, togglable)
       add(self.icons, Icon:new(#self.icons+1, 4.2, #self.icons+1, 208, self.spacing))
    end
    
-   add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable))
+   add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable, -1))
 end
 
 function CablesMenu:update(issues, t)
@@ -594,7 +597,7 @@ function FilesMenu:new(hardDriveFull)
    end
    
    filesMenu.settings = {}
-   add(filesMenu.settings, Setting:new("", 1, hardDriveFull, 0, true))
+   add(filesMenu.settings, Setting:new("", 1, hardDriveFull, 0, true, -1))
    
    return filesMenu
 end
@@ -648,7 +651,7 @@ end
 
 function FilesMenu:addFile(text)   
    add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 210, self.spacing))
-   add(self.files, Setting:new(text, #self.icons, true, self.spacing, true))
+   add(self.files, Setting:new(text, #self.icons, true, self.spacing, true, -1))
 end
 
 function FilesMenu:isValidPos(x, y)
@@ -706,17 +709,28 @@ function BrowserMenu:new(manyToolbars)
    browserMenu.settings = {}
    browserMenu.toolbars = {}
 
-   add(browserMenu.settings, Setting:new("", 1, manyToolbars, 1, true))
+   add(browserMenu.settings, Setting:new("", 1, manyToolbars, 1, true, -1))
    
    browserMenu.icons = {}
    browserMenu.spacing = 10
 
    browserMenu.cursor = Cursor:new(10, 1, browserMenu.spacing)
 
+   browserMenu.toolbarNames = {
+      "my super toolbar",
+      "safe search toolbar",
+      "not a virus toolbar",
+      "shopping toolbar",
+      "toolbar 2.0",
+      "the best toolbar 1995"
+   }
+
    if not manyToolbars then
       nbToolbars = flr(rnd(4))+1
       for i=0, nbToolbars, 1 do
-	 browserMenu:addToolbar("azeaze")
+	 toolbarNameIndex = flr(rnd(#browserMenu.toolbarNames))+1
+	 -- filesMenu:addFile(filesMenu.fileNames[fileNameIndex])
+	 browserMenu:addToolbar(browserMenu.toolbarNames[toolbarNameIndex])
       end
    end
    
@@ -727,7 +741,7 @@ end
 function BrowserMenu:addToolbar(text)
    
    add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 210, self.spacing))
-   add(self.toolbars, Setting:new(text, #self.icons, true, self.spacing, true))
+   add(self.toolbars, Setting:new(text, #self.icons, true, self.spacing, true, 10))
 end
 
 function BrowserMenu:update(issues, t)
@@ -801,9 +815,9 @@ function BrowserMenu:draw()
    print("internet explorator", 18, 10)
    rectfill(6, 18, 121, 121, 7)
 
-   print("alta vistron", 40, 52, 1)
-   rectfill(30, 60, 95, 65, 0)
-   rectfill(31, 61, 94, 64, 7)
+   print("alta vistron", 40, 72, 1)
+   rectfill(30, 80, 95, 85, 0)
+   rectfill(31, 81, 94, 84, 7)
 
 
    i = 0
@@ -854,7 +868,7 @@ function AvastMenu:new(virus)
    avastMenu.settings = {}
    avastMenu.scanning = false
    avastMenu.scanStartTime = 0
-   add(avastMenu.settings, Setting:new("", 0, virus, 0, true))
+   add(avastMenu.settings, Setting:new("", 0, virus, 0, true, -1))
    return avastMenu
 end
 
