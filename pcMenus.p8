@@ -118,7 +118,8 @@ function DesktopMenu:new(issues)
    return desktopMenu
 end
 
-function DesktopMenu:update()
+function DesktopMenu:update(issues)
+   self.issues = issues
    newPos = {}
    newPos.x = self.cursor.pos.x
    newPos.y = self.cursor.pos.y
@@ -327,12 +328,6 @@ function SettingsMenu:update()
 	       if vv.iconIndex == v.index then
 		  if vv.togglable then
 		     vv.status = not vv.status
-		     	    
-		     if v.spriteId == 204 then
-			v.spriteId = 205
-		     else
-			v.spriteId = 204
-		     end
 		  end
 	       end
 	    end
@@ -340,6 +335,22 @@ function SettingsMenu:update()
 	 end
       end
    end
+   
+   
+   for v in all(self.icons) do
+      i = 1
+      for vv in all(self.settings) do
+	 if v.index == i then
+	    if vv.status then
+	       v.spriteId = 205
+	    else
+	       v.spriteId = 204
+	    end
+	 end
+	 i+=1
+      end
+   end
+
    
    tmpIndex = self:isValidPos(newPos.x, newPos.y)
    if tmpIndex then
@@ -432,7 +443,7 @@ function CablesMenu:update()
 	       if vv.iconIndex == v.index then
 		  if vv.togglable then
 		     vv.status = not vv.status
-		     	    
+		     
 		     if v.spriteId == 204 then
 			v.spriteId = 208
 		     else
