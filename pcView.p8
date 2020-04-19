@@ -34,9 +34,6 @@ function PcView:new(issues)
 end
 
 function PcView:loadIssues(issues)
-
-
-
    
    self.issues = issues --generateIssues(nbIssues)
 
@@ -196,13 +193,18 @@ function PcView:update(t)
 	    end
 	    if not vv.status then
 	       self.allOk = false
-
 	    end
 
 	 end
       end
       ethernetUnPlugged = false
+      hardDriveFull     = false
       self.issues = reconstructedIssues
+      printh("-----------")
+      for aa in all(self.issues) do
+	 printh(aa)
+      end
+      printh("-----------")
       i = 0
       for v in all(self.issues) do
 	 if i == 3 then -- unplugged ethernet
@@ -210,8 +212,25 @@ function PcView:update(t)
 	       ethernetUnPlugged = true
 	    end
 	 end
+
+	 if i == 10 then
+	    if v == 0 then
+	       hardDriveFull = true
+	    end
+	 end
 	 i+=1
       end
+      if not hardDriveFull then
+	 for vv in all(self.issues) do
+	    if vv == 8 then
+	       vv = 1
+	    end
+	 end
+      end
+      
+      printh("======")
+      printh(hardDriveFull)
+      printh("======")
 
       i = 0
       for v in all(self.menus) do
@@ -221,7 +240,11 @@ function PcView:update(t)
       	    for vv in all(v.settings) do
 
       	       if j == 0 then
-      		  vv.status = not ethernetUnPlugged -- TODO BUGGY
+      		  vv.status = not ethernetUnPlugged
+      	       end
+
+	       if j == 1 then
+      		  vv.status = not hardDriveFull
       	       end
       	       j+=1
       	    end

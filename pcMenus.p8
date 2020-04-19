@@ -128,6 +128,7 @@ function DesktopMenu:update(issues, t)
 
    unpluggedKeyboard = false
    unpluggedMouse = false
+   unpluggedScreen = false
    
    i = 0
    for v in all(self.issues) do
@@ -139,18 +140,25 @@ function DesktopMenu:update(issues, t)
 	 if i == 1 then
 	    unpluggedMouse = true
 	 end
+	 if i == 2 then
+	    unpluggedScreen = true
+	 end
       end
       i+= 1
    end
 
+
    if (btnp(5)) then -- X
-      if self.exitState == 0 then
-	 selectedMenuId = self.cursor.currentIndex
+      if (self.exitState == 0) then
+	 if (not unpluggedScreen and not unpluggedKeyboard and not unpluggedMouse) then
+	    selectedMenuId = self.cursor.currentIndex
+	 end
       else
 	 self.exitState = 0
 	 selectedMenuId = CABLES_MENU_ID
       end
    end
+
 
    if (btnp(4)) then -- C
       if self.exitState == 0 then
@@ -528,7 +536,7 @@ end
 
 FilesMenu = {}
 
-function FilesMenu:new()
+function FilesMenu:new(hardDriveFull)
    local filesMenu = setmetatable({}, { __index = FilesMenu})
    
    filesMenu.id = FILES_MENU_ID
@@ -538,7 +546,14 @@ function FilesMenu:new()
    filesMenu.icons = {}
    filesMenu.spacing = 10
 
-   filesMenu.cursor = Cursor:new(4.2, 1, filesMenu.spacing)
+   filesMenu.cursor = Cursor:new(10, 1, filesMenu.spacing)
+
+   for i=0,5,1 do
+      filesMenu:addFile("cat.png")
+   end
+   
+   filesMenu.settings = {}
+   add(filesMenu.settings, Setting:new("", 1, hardDriveFull, 0, true))
    
    return filesMenu
 end
@@ -546,26 +561,95 @@ end
 function FilesMenu:update(issues, t)
    selectedMenuId = self.id
    
+   newPos = {}
+   newPos.x = self.cursor.pos.x
+   newPos.y = self.cursor.pos.y
+
+   if (btnp(⬆️)) then
+      newPos.y -= 1
+   elseif (btnp(⬇️)) then
+      newPos.y += 1
+   end
+   
    if (btnp(⬅️)) then
       selectedMenuId = DESKTOP_MENU_ID
    end
+
+   if (btnp(5)) then -- X
+      for v in all(self.icons) do
+	 if v.index == self.cursor.currentIndex then
+
+	    for vv in all(self.files) do
+	       if vv.iconIndex == v.index then
+		  if vv.togglable then
+
+		     vv.status = false
+		     
+		     for vvv in all(self.settings) do
+			printh(vvv.status)
+			vvv.status = true
+			printh(vvv.status)
+		     end
+		  end
+	       end
+	    end
+
+	 end
+      end
+   end
+
+   
+
+   tmpIndex = self:isValidPos(newPos.x, newPos.y)
+   if tmpIndex then
+      self.cursor.pos = newPos
+      self.cursor.currentIndex = tmpIndex
+   end
+
    
 
    return selectedMenuId
 end
 
-function FilesMenu:addFile(text)
-   
+function FilesMenu:addFile(text)   
    add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 210, self.spacing))
-
    add(self.files, Setting:new(text, #self.icons, true, self.spacing, true))
 end
+
+function FilesMenu:isValidPos(x, y)
+   
+   retVal = false
+   for v in all(self.icons) do
+      if v.pos.x == (x*v.spacing+10) and v.pos.y == (y*v.spacing+10) then
+	 retVal = v.index
+      end
+   end
+
+   return retVal
+end
+
 
 function FilesMenu:draw()
    spr(192, 7, 8, 1, 1)
    print("files", 18, 10)
    -- print("press x to run virus scan", 7, 30)
 
+
+   i = 0
+   for v in all(self.files) do
+      if v.status then 
+	 v:draw()
+	 j = 0
+	 for vv in all(self.icons) do
+	    if i == j then
+	       vv:draw()
+	    end
+	    j+=1
+	 end
+      end
+      i += 1
+   end
+   self.cursor:draw()
    rectfill(6, 109, 121, 121, 5)
    print("suppress : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
@@ -659,8 +743,6 @@ function AvastMenu:update(issues, t)
 	 v.status = true
       end
    end
-
-   
    
    return selectedMenuId
 end
@@ -672,8 +754,9 @@ function AvastMenu:draw(t)
    print("press x to run virus scan", 7, 30)
 
    if self.scanning then
-      print("Scanning, please wait ...", 15, 50)
+      print("scanning, please wait ...", 15, 50)
    end
+   
    rectfill(6, 109, 121, 121, 5)
    print("scan : \151", 7, 116, 15)
    print("go back : \139", 74, 116, 15)
