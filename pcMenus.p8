@@ -220,7 +220,7 @@ function DesktopMenu:draw()
       print("lucarne 98", 82, 103, 2)
 
       self.cursor:draw()
-      print(self.cursor.currentIndex, 0, 0)
+      -- print(self.cursor.currentIndex, 0, 0)
       if self.exitState == 0 then
 	 print("select : \151", 7, 110, 15)
       end
