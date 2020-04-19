@@ -26,14 +26,14 @@ function Ticket:new(text, index, issues)
    return ticket
 end
 
-function Ticket:draw_cropped()
+function Ticket:draw_cropped(pos)
    cropped_text = (self.index + 1)..". "..sub(self.text, 0, 25) .. "..."
 
-   print(cropped_text, 6, rowHeight*self.index + 9)
+   print(cropped_text, 6, rowHeight*pos + 9)
 end
 
 function Ticket:draw_full()
-   print(self.text.."\n"..generate_issues_string(self.issues), 6, 9)
+   print((self.index + 1)..". "..self.text.."\n"..generate_issues_string(self.issues), 6, 9)
 end
 
 
@@ -56,7 +56,8 @@ function Selector:new(pos)
 end
 
 function Selector:draw()
-   rect(self.x_offset, self.y_offset+(self.h*self.pos), self.x_offset + self.w, self.y_offset+(self.h*self.pos) + self.h, 9)
+   page_offset = self.pos%7
+   rect(self.x_offset, self.y_offset+(self.h*page_offset), self.x_offset + self.w, self.y_offset+(self.h*page_offset) + self.h, 9)
 end
 
 -- =================================================================
@@ -118,8 +119,13 @@ function TicketsView:draw(t)
 
    if (self.displayState == 0) then
 
-      for t in all(self.tickets) do
-         t:draw_cropped()
+      page_size = 7
+      first_t = flr(self.selector.pos /page_size) *page_size + 1
+      printh(first_t)
+
+      for i = first_t, first_t + 6 do
+         t = self.tickets[i]
+         t:draw_cropped((i-1)%page_size)
       end
 
       self.selector:draw()
