@@ -12,6 +12,7 @@ function PC:new(x,y, nbIssues)
    pc.pos.y = y
 
    pc.issues = generateIssues(nbIssues)
+   pc.highlight = false
    return pc
 end
 
@@ -188,19 +189,18 @@ function PcView:update(t)
       reconstructedIssues = {}
       self.allOk = true
       for v in all(self.menus) do
-	 for vv in all(v.settings) do
-	    if vv.status then
-	       add(reconstructedIssues, 1)
-	    else
-	       add(reconstructedIssues, 0)
-	    end
-	    if not vv.status then
-	       self.allOk = false
-	    end
-
-	 end
+	      for vv in all(v.settings) do
+	         if vv.status then
+	            add(reconstructedIssues, 1)
+	         else
+	            add(reconstructedIssues, 0)
+	         end
+	         if not vv.status then
+	            self.allOk = false
+	         end
+	      end
       end
-      
+
 
       ethernetUnPlugged = false
       hardDriveFull     = false
@@ -209,30 +209,30 @@ function PcView:update(t)
       printh("-----------")
       i = 0
       for aa in all(self.issues) do
-	 printh(i.." "..aa)
-	 i += 1
+	      printh(i.." "..aa)
+	      i += 1
       end
       printh("-----------")
       i = 0
       for v in all(self.issues) do
-	 if i == 3 then -- unplugged ethernet
-	    if v == 0 then
-	       ethernetUnPlugged = true
-	    end
-	 end
+	      if i == 3 then -- unplugged ethernet
+	         if v == 0 then
+	            ethernetUnPlugged = true
+	         end
+	      end
 
-	 if i == 10 then
-	    if v == 0 then
-	       hardDriveFull = true
-	    end
-	 end
+         if i == 10 then
+            if v == 0 then
+               hardDriveFull = true
+            end
+         end
 
-	 if i == 12 then
-	    if v == 0 then
-	       virus = true
-	    end
-	 end
-	 i+=1
+         if i == 12 then
+            if v == 0 then
+               virus = true
+            end
+         end
+	      i+=1
       end
 
 
@@ -256,21 +256,18 @@ function PcView:update(t)
       	 i += 1
       end
 
-            
+
       if not hardDriveFull then
-	 for vv in all(self.issues) do
-	    if vv == 8 then
-	       vv = 1
-	    end
-	 end
+         for vv in all(self.issues) do
+            if vv == 8 then
+               vv = 1
+            end
+         end
       end
 
    end
 
    return 1
-
-
-
 end
 
 function PcView:draw(t)

@@ -27,7 +27,7 @@ function _init()
       new_pc = PC:new(b.x, b.y, rnd(TOTAL_NB_ISSUES))
       add(pc_list,new_pc )
 
-      ticketId = ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc.issues)
+      ticketId = ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc)
 
       -- printh("-")
    end
@@ -82,7 +82,7 @@ function _update60()
             -- printh("PC pos "..toggle_pc.coords.x.." "..toggle_pc.coords.y)
             for i = 1, #pc_list do
                if(pc_list[i].pos.x == toggle_pc.coords.x and pc_list[i].pos.y == toggle_pc.coords.y) then
-             current_pc = pc_list[i]
+                  current_pc = pc_list[i]
                   pcView:loadIssues(current_pc.issues)
                   -- printh("Trouve")
                end

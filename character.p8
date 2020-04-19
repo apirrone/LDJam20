@@ -152,5 +152,5 @@ function Character:draw(t)
 
    -- DEBUG
    hitbox = { x0 = new_x +1 , y0 = new_y + 13, x1 = new_x + 7, y1 = new_y + 15}
-   rect(hitbox.x0, hitbox.y0, hitbox.x1, hitbox.y1)
+   rect(hitbox.x0, hitbox.y0, hitbox.x1, hitbox.y1, 15)
 end

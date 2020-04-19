@@ -16,12 +16,25 @@ function generate_issues_string(issues)
    return str
 end
 
-function Ticket:new(text, index, issues)
+function is_all_ok(issues)
+   all_ok = true
+   for i in all(issues) do
+      if i == 0 then
+         all_ok = false
+      end
+   end
+
+   return all_ok
+end
+
+
+function Ticket:new(text, index, pc)
    local ticket = setmetatable({}, { __index = Ticket})
 
    ticket.text = text
    ticket.index = index
-   ticket.issues = issues
+   ticket.pc = pc
+   ticket.highlighted = false
 
    return ticket
 end
@@ -29,11 +42,15 @@ end
 function Ticket:draw_cropped(pos)
    cropped_text = (self.index + 1)..". "..sub(self.text, 0, 25) .. "..."
 
-   print(cropped_text, 6, rowHeight*pos + 9)
+   color = 7
+   if(self.highlighted) then color = 8 end
+   if(is_all_ok(self.pc.issues)) then color = 11 end
+
+   print(cropped_text, 6, rowHeight*pos + 9, color)
 end
 
 function Ticket:draw_full()
-   print((self.index + 1)..". "..self.text.."\n"..generate_issues_string(self.issues), 6, 9)
+   print((self.index + 1)..". "..self.text.."\n"..generate_issues_string(self.pc.issues), 6, 9)
 end
 
 
@@ -74,27 +91,36 @@ function TicketsView:new()
    return ticketsView
 end
 
-function TicketsView:addTicket(text, issues)
+function TicketsView:addTicket(text, pc)
    id = #(self.tickets)
-   ticket = Ticket:new(text, id, issues)
+   ticket = Ticket:new(text, id, pc)
    add(self.tickets, ticket)
    return id
 end
 
-function TicketsView:removeTicket(index)
-   del(self.tickets, index)
+function TicketsView:removeTicket(ticket)
+   ticket.pc.highlight = false
+   del(self.tickets, ticket)
    -- TODO décaler les ids suivants vers la gauche
+end
+
+function TicketsView:update_tickets()
+   for t in all(self.tickets) do
+      if(is_all_ok(t.pc.issues)) then
+         self:removeTicket(t)
+      end
+   end
 end
 
 function TicketsView:update()
 
    if (btnp(⬆️)) then
       if (self.selector.pos > 0) then
-	 self.selector.pos -= 1
+	      self.selector.pos -= 1
       end
    elseif (btnp(⬇️)) then
       if (self.selector.pos < #self.tickets-1) then
-	 self.selector.pos += 1
+	      self.selector.pos += 1
       end
    end
 
@@ -104,10 +130,17 @@ function TicketsView:update()
       self.displayState = 1
    end
 
-   if(btnp(4))then
+   if(btnp(4)) then
       return -1
+   elseif(btnp(5)) then
+      ticket = self.tickets[self.selector.pos + 1]
+      if(is_all_ok(ticket.pc.issues)) then
+         self:removeTicket(ticket)
+      else
+         ticket.highlighted = not ticket.highlighted
+         ticket.pc.highlight = ticket.highlighted
+      end
    end
-
 
 end
 
@@ -118,12 +151,10 @@ function TicketsView:draw(t)
 
 
    if (self.displayState == 0) then
-
       page_size = 7
       first_t = flr(self.selector.pos /page_size) *page_size + 1
-      printh(first_t)
 
-      for i = first_t, first_t + 6 do
+      for i = first_t, min(first_t + 6, #self.tickets) do
          t = self.tickets[i]
          t:draw_cropped((i-1)%page_size)
       end
