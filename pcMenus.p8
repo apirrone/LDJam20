@@ -398,13 +398,12 @@ function CablesMenu:new()
    cablesMenu.spacing = 15
 
    cablesMenu.cursor = Cursor:new(5, 1, cablesMenu.spacing)
-   
    return cablesMenu
 end
 
 function CablesMenu:addSetting(text, status, togglable)
    if status then
-      add(self.icons, Icon:new(#self.icons+1, 5, #self.icons+1, 205, self.spacing))
+      add(self.icons, Icon:new(#self.icons+1, 5, #self.icons+1, 208, self.spacing))
    else
       add(self.icons, Icon:new(#self.icons+1, 5, #self.icons+1, 204, self.spacing))
    end
@@ -435,7 +434,7 @@ function CablesMenu:update()
 		     vv.status = not vv.status
 		     	    
 		     if v.spriteId == 204 then
-			v.spriteId = 205
+			v.spriteId = 208
 		     else
 			v.spriteId = 204
 		     end
@@ -452,12 +451,6 @@ function CablesMenu:update()
       self.cursor.pos = newPos
       self.cursor.currentIndex = tmpIndex
    end
-
-
-
-
-
-
 
    
    if (btnp(⬅️)) then

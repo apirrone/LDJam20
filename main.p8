@@ -26,6 +26,7 @@ function _init()
    pcView = PcView:new(ticketId, 2)
 
    palt(11, true)
+   palt(0, false)
 
 end
 
@@ -43,10 +44,10 @@ function _update60()
 
    -- ===============================
    -- change view test
-   -- if (btnp(4)) then -- C
-   -- 	  viewCycle = (viewCycle+1)%nbViews
-   -- 	  camera(0,0)
-   -- end
+   if (btnp(4)) then -- C
+      viewCycle = (viewCycle+1)%nbViews
+      camera(0,0)
+   end
 
    if viewCycle == 0 then
       currentView = mapView
