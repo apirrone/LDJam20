@@ -18,9 +18,9 @@ end
 
 NB_PHYSICAL_ISSUES = 4
 NB_SETTINGS_ISSUES = 3
-NB_MONITORING_ISSUES = 3
+NB_MONITORING_ISSUES = 4
 NB_BROWSER_ISSUES = 1
-NB_VIRUS_ISSUES = 2
+NB_VIRUS_ISSUES = 1
 TOTAL_NB_ISSUES = NB_PHYSICAL_ISSUES + NB_SETTINGS_ISSUES + NB_MONITORING_ISSUES + NB_BROWSER_ISSUES + NB_VIRUS_ISSUES
 
 PcView = {}
@@ -118,10 +118,14 @@ function PcView:generateMenus(issues)
 	 end
 
 	 if i == 10 then
-	    manyToolbars = true
+	    hardDriveFull = true
 	 end
 
 	 if i == 11 then
+	    manyToolbars = true
+	 end
+
+	 if i == 12 then
 	    virus = true
 	 end
 
@@ -196,12 +200,17 @@ function PcView:update(t)
 
 	 end
       end
+      
+
       ethernetUnPlugged = false
       hardDriveFull     = false
+      virus             = false
       self.issues = reconstructedIssues
       printh("-----------")
+      i = 0
       for aa in all(self.issues) do
-	 printh(aa)
+	 printh(i.." "..aa)
+	 i += 1
       end
       printh("-----------")
       i = 0
@@ -217,19 +226,15 @@ function PcView:update(t)
 	       hardDriveFull = true
 	    end
 	 end
-	 i+=1
-      end
-      if not hardDriveFull then
-	 for vv in all(self.issues) do
-	    if vv == 8 then
-	       vv = 1
+
+	 if i == 12 then
+	    if v == 0 then
+	       virus = true
 	    end
 	 end
+	 i+=1
       end
-      
-      printh("======")
-      printh(hardDriveFull)
-      printh("======")
+
 
       i = 0
       for v in all(self.menus) do
@@ -251,16 +256,15 @@ function PcView:update(t)
       	 i += 1
       end
 
+            
+      if not hardDriveFull then
+	 for vv in all(self.issues) do
+	    if vv == 8 then
+	       vv = 1
+	    end
+	 end
+      end
 
-      -- DEBUG
-      -- for v in all(reconstructedIssues) do
-      -- 	 printh(v)
-      -- end
-      -- printh("-----------------------------")
-      -- for v in all(self.issues) do
-      -- 	 printh(v)
-      -- end
-      -- printh("===========")
    end
 
    return 1
@@ -296,10 +300,10 @@ function generateIssues(nbIssues)
    issues = {}
 
    -- | physical | settings | monitoring | browser | virus|
-   --   1 1 1 1    1 1 1       1 1 1        1       1
+   --   1 1 1 1    1 1 1       1 1 1   (1)     1       1
    -- Physical   : unplugged keyboard, unplugged mouse, unplugged screen, unplugged ethernet cable
    -- settings   : enable mouse, enable printing, enable register
-   -- monitoring : no internet, hard drive full, ver.num
+   -- monitoring : no internet, hard drive full, ver.num, hard drive full (don't ask)
    -- browser    : many toolbars
    -- virus      : pron ads, ransomware (one setting, running avast clears it)
 

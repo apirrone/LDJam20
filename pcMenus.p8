@@ -662,13 +662,16 @@ end
 
 BrowserMenu = {}
 
-function BrowserMenu:new()
+function BrowserMenu:new(manyToolbars)
    local browserMenu = setmetatable({}, { __index = BrowserMenu})
    
    browserMenu.id = BROWSER_MENU_ID
 
    
    browserMenu.settings = {}
+
+   add(browserMenu.settings, Setting:new("", 1, manyToolbars, 1, true))
+   
    browserMenu.icons = {}
    browserMenu.spacing = 10
 
@@ -721,7 +724,7 @@ function AvastMenu:new(virus)
    avastMenu.settings = {}
    avastMenu.scanning = false
    avastMenu.scanStartTime = 0
-   add(self.settings, Setting:new("", 0, virus, 0, true))
+   add(avastMenu.settings, Setting:new("", 0, virus, 0, true))
    return avastMenu
 end
 

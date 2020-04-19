@@ -21,15 +21,15 @@ function _init()
    pc_coords = mapView:scan_pcs()
    pc_list = {}
    for a,b in ipairs(pc_coords) do
-      for i,v in pairs(b) do
-         printh(i.." "..v)
-      end
+      -- for i,v in pairs(b) do
+      --    printh(i.." "..v)
+      -- end
       new_pc = PC:new(b.x, b.y, rnd(TOTAL_NB_ISSUES))
       add(pc_list,new_pc )
 
       ticketId = ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc.issues)
 
-      printh("-")
+      -- printh("-")
    end
 
    current_pc = pc_list[1]
@@ -79,12 +79,12 @@ function _update60()
          if(toggle_pc.val) then
             currentView = pcView
 
-            printh("PC pos "..toggle_pc.coords.x.." "..toggle_pc.coords.y)
+            -- printh("PC pos "..toggle_pc.coords.x.." "..toggle_pc.coords.y)
             for i = 1, #pc_list do
                if(pc_list[i].pos.x == toggle_pc.coords.x and pc_list[i].pos.y == toggle_pc.coords.y) then
              current_pc = pc_list[i]
                   pcView:loadIssues(current_pc.issues)
-                  printh("Trouve")
+                  -- printh("Trouve")
                end
             end
          end
