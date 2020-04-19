@@ -28,31 +28,44 @@ PcView = {}
 function PcView:new(issues)
    local pcView = setmetatable({}, { __index = PcView})
 
-   pcView.allOk = false
-   pcView.issues = issues --generateIssues(nbIssues)
-
-   pcView.menus = {}
-   add(pcView.menus, DesktopMenu:new(pcView.issues))
-
-
-   pcView:generateMenus(pcView.issues)
-
-
-   i = 0
-   for v in all(pcView.menus) do
-
-      if v.id == 0 then
-	 pcView.currentMenu = v
-      end
-
-      i+=1
-   end
+   PcView:loadIssues(issues)
 
    return pcView
 end
 
 function PcView:loadIssues(issues)
- -- TODO : à remplir j'ai peur de tout casser
+   -- TODO : à remplir j'ai peur de tout casser
+
+   
+   self.allOk = true
+   for v in all(self.menus) do
+      for vv in all(v.settings) do
+	 if not vv.status then
+	    self.allOk = false
+	 end
+	 
+      end
+   end
+
+   
+   self.issues = issues --generateIssues(nbIssues)
+
+   self.menus = {}
+   add(self.menus, DesktopMenu:new(self.issues))
+
+   self:generateMenus(self.issues)
+
+
+   i = 0
+   for v in all(self.menus) do
+
+      if v.id == 0 then
+	 self.currentMenu = v
+      end
+
+      i+=1
+   end
+   
 end
 
 function PcView:generateMenus(issues)

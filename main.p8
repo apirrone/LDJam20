@@ -82,6 +82,7 @@ function _update60()
          printh("PC pos "..toggle_pc.coords.x.." "..toggle_pc.coords.y)
          for i = 1, #pc_list do
             if(pc_list[i].pos.x == toggle_pc.coords.x and pc_list[i].pos.y == toggle_pc.coords.y) then
+	       current_pc = pc_list[i]
                pcView:loadIssues(current_pc.issues)
                printh("Trouve")
             end
@@ -97,6 +98,7 @@ function _update60()
    return_value = currentView:update()
 
    if return_value == -1 then
+      current_pc.issues = pcView.issues
       currentView = mapView
       camera(0,0)
    end
