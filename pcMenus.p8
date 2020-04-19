@@ -547,9 +547,50 @@ function FilesMenu:new(hardDriveFull)
    filesMenu.spacing = 10
 
    filesMenu.cursor = Cursor:new(10, 1, filesMenu.spacing)
-
-   for i=0,5,1 do
-      filesMenu:addFile("cat.png")
+   filesMenu.fileNames = {
+      "importantwork.odt",
+      "lun32.dll",
+      "dormantmalware.exe",
+      "batstrezo.png",
+      "document.odt",
+      "work.odt",
+      "passwords.txt",
+      "report.odt",
+      "riskmanagement.odt",
+      "globalmarketshare.calc",
+      "agenda.calc",
+      "image.odt",
+      "grantproposal.odt",
+      "convention.odt",
+      "ihatemyboss.odt",
+      "birthday.jpg",
+      "paris.jpg",
+      "bordeaux.jpg",
+      "starwars9script.txt",
+      "untitled.odt",
+      "untitled1.odt",
+      "untitled2.odt",
+      "untitled3.odt",
+      "untitled4.odt",
+      "digandbuild.exe",
+      "launchcodes.txt",
+      "mysecretkink.avi",
+      "fireflys02e01.avi",
+      "secret-lair.kml",
+      "IMG83920.png",
+      "IMG83720.png",
+      "IMG83920.png",
+      "IMG67820.png",
+      "IMG83740.png",
+      "IMG87420.png",
+      "IMG01920.png",
+      "halflife3.exe",
+      "windsofwinter.ipub",
+      "40shadesofgreen.ipub"}
+   
+   for i=0,7,1 do
+      fileNameIndex = flr(rnd(#filesMenu.fileNames))+1
+      filesMenu:addFile(filesMenu.fileNames[fileNameIndex])
    end
    
    filesMenu.settings = {}
@@ -586,9 +627,7 @@ function FilesMenu:update(issues, t)
 		     vv.status = false
 		     
 		     for vvv in all(self.settings) do
-			printh(vvv.status)
 			vvv.status = true
-			printh(vvv.status)
 		     end
 		  end
 	       end
@@ -598,15 +637,11 @@ function FilesMenu:update(issues, t)
       end
    end
 
-   
-
    tmpIndex = self:isValidPos(newPos.x, newPos.y)
    if tmpIndex then
       self.cursor.pos = newPos
       self.cursor.currentIndex = tmpIndex
-   end
-
-   
+   end   
 
    return selectedMenuId
 end
@@ -669,40 +704,135 @@ function BrowserMenu:new(manyToolbars)
 
    
    browserMenu.settings = {}
+   browserMenu.toolbars = {}
 
    add(browserMenu.settings, Setting:new("", 1, manyToolbars, 1, true))
    
    browserMenu.icons = {}
    browserMenu.spacing = 10
 
-   browserMenu.cursor = Cursor:new(4.2, 1, browserMenu.spacing)
+   browserMenu.cursor = Cursor:new(10, 1, browserMenu.spacing)
+
+   if not manyToolbars then
+      nbToolbars = flr(rnd(4))+1
+      for i=0, nbToolbars, 1 do
+	 browserMenu:addToolbar("azeaze")
+      end
+   end
+   
    
    return browserMenu
+end
+
+function BrowserMenu:addToolbar(text)
+   
+   add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 210, self.spacing))
+   add(self.toolbars, Setting:new(text, #self.icons, true, self.spacing, true))
 end
 
 function BrowserMenu:update(issues, t)
    selectedMenuId = self.id
    
+   newPos = {}
+   newPos.x = self.cursor.pos.x
+   newPos.y = self.cursor.pos.y
+
+   if (btnp(⬆️)) then
+      newPos.y -= 1
+   elseif (btnp(⬇️)) then
+      newPos.y += 1
+   end
+   
    if (btnp(⬅️)) then
       selectedMenuId = DESKTOP_MENU_ID
    end
-   
+
+   if (btnp(5)) then -- X
+
+      for v in all(self.icons) do
+	 if v.index == self.cursor.currentIndex then
+
+	    for vv in all(self.toolbars) do
+	       if vv.iconIndex == v.index then
+		  if vv.togglable then
+		     vv.status = false
+		     allRemoved = true
+		     for aze in all(self.toolbars) do
+			if aze.status then
+			   allRemoved = false
+			end
+		     end
+		     for vvv in all(self.settings) do
+			vvv.status = allRemoved
+		     end
+		  end
+	       end
+	    end
+	    
+	 end
+      end
+   end
+
+   tmpIndex = self:isValidPos(newPos.x, newPos.y)
+   if tmpIndex then
+      self.cursor.pos = newPos
+      self.cursor.currentIndex = tmpIndex
+   end   
 
    return selectedMenuId
 end
 
-function BrowserMenu:addSettings(text)
+function BrowserMenu:isValidPos(x, y)
    
-   add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 210, self.spacing))
+   retVal = false
+   for v in all(self.icons) do
+      if v.pos.x == (x*v.spacing+10) and v.pos.y == (y*v.spacing+10) then
+	 retVal = v.index
+      end
+   end
 
-   add(self.settings, Setting:new(text, #self.icons, true, self.spacing, true))
+   return retVal
 end
+
 
 function BrowserMenu:draw()
 
    spr(194, 7, 8, 1, 1)
    print("internet explorator", 18, 10)
+   rectfill(6, 18, 121, 121, 7)
 
+   print("alta vistron", 40, 52, 1)
+   rectfill(30, 60, 95, 65, 0)
+   rectfill(31, 61, 94, 64, 7)
+
+
+   i = 0
+   for v in all(self.toolbars) do
+      if v.status then 
+	 v:draw()
+	 j = 0
+	 for vv in all(self.icons) do
+	    if i == j then
+	       vv:draw()
+	    end
+	    j+=1
+	 end
+      end
+      i += 1
+   end
+
+   allRemoved = true
+   for aze in all(self.toolbars) do
+      if aze.status then
+	 allRemoved = false
+      end
+   end
+   if not allRemoved then
+      self.cursor:draw()
+   end
+
+   
+   
    rectfill(6, 109, 121, 121, 5)
    print("suppress : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
