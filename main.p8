@@ -25,6 +25,8 @@ function _init()
 
    pcView = PcView:new(ticketId, 2)
 
+   currentView = mapView
+
    palt(11, true)
 
 end
@@ -43,17 +45,25 @@ function _update60()
 
    -- ===============================
    -- change view test
+
+   oldView = currentView
    if (btnp(4)) then -- C
 	  viewCycle = (viewCycle+1)%nbViews
-	  camera(0,0)
+     if viewCycle == 0 then
+        currentView = mapView
+     elseif viewCycle == 1 then
+        currentView = ticketsView
+     elseif viewCycle == 2 then
+        currentView = pcView
+     end
    end
 
-   if viewCycle == 0 then
-      currentView = mapView
-   elseif viewCycle == 1 then
-      currentView = ticketsView
-   elseif viewCycle == 2 then
+   if(currentView == mapView and mapView:toggle_pc()) then
       currentView = pcView
+   end
+
+   if currentView != oldView then
+      camera(0,0)
    end
    -- ===============================
 

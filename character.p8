@@ -31,18 +31,43 @@ function Character:new(x, y, w, h, speed)
    return character
 end
 
-function is_wall(x,y)
-   return fget(mget(x,y), 7)
+function is_flag(x,y, flag)
+   return fget(mget(x,y), flag)
 end
 
-function collide_wall(hitbox)
+function is_wall(x,y)
+   return is_flag(x,y, 7)
+end
+
+function is_pc(x,y)
+   return is_flag(x,y, 6)
+end
+
+function is_chair(x,y)
+   return is_flag(x,y, 5)
+end
+
+function collide_flag(hitbox, flag)
    x0 = flr(hitbox.x0/8)
    y0 = flr(hitbox.y0/8)
    x1 = flr(hitbox.x1/8)
    y1 = flr(hitbox.y1/8)
 
+   return is_flag(x0,y0, flag) or is_flag(x0,y1, flag) or is_flag(x1,y0, flag) or is_flag(x1,y1, flag)
+end
 
-   return is_wall(x0,y0) or is_wall(x0, y1) or is_wall(x1,y0) or is_wall(x1,y1)
+function collide_wall(hitbox)
+   return collide_flag(hitbox,7)
+end
+
+function Character:in_front_pc()
+
+    if(self.currentAnimation == self.animations.walkRightAnimation) then
+      hitbox = { x0 = self.pos.x +1 , y0 = self.pos.y + 13, x1 = self.pos.x + 7, y1 = self.pos.y + 15}
+      return collide_flag(hitbox, 5)
+    end
+
+    return false
 end
 
 function Character:update(mapView)

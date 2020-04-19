@@ -9,7 +9,7 @@ function MapView:new(player)
 
    mapView.player = player
    mapView.NPCs = {}
-   mapView.size = {w = 128, h = 128} -- TODO: use definitive size
+   mapView.size = {w = 60 * 8, h = 25  * 8} -- TODO: use definitive size
 
    return mapView
 end
@@ -36,7 +36,10 @@ function MapView:update()
    end
 
    self:updateCamera()
+end
 
+function MapView:toggle_pc()
+   return btnp(5) and self.player:in_front_pc()
 end
 
 function MapView:draw(t)
