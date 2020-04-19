@@ -95,7 +95,7 @@ function _update60()
    -- end
    -- ===============================
 
-   return_value = currentView:update()
+   return_value = currentView:update(t)
 
    if return_value == -1 then
       current_pc.issues = pcView.issues

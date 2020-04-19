@@ -34,18 +34,8 @@ function PcView:new(issues)
 end
 
 function PcView:loadIssues(issues)
-   -- TODO : à remplir j'ai peur de tout casser
 
-   
-   self.allOk = true
-   for v in all(self.menus) do
-      for vv in all(v.settings) do
-	 if not vv.status then
-	    self.allOk = false
-	 end
-	 
-      end
-   end
+
 
    
    self.issues = issues --generateIssues(nbIssues)
@@ -55,6 +45,16 @@ function PcView:loadIssues(issues)
 
    self:generateMenus(self.issues)
 
+   
+   self.allOk = true
+   for v in all(self.menus) do
+      for vv in all(v.settings) do
+	 if not vv.status then
+	    self.allOk = false
+	 end	 
+      end
+   end
+   
 
    i = 0
    for v in all(self.menus) do
@@ -70,7 +70,6 @@ end
 
 function PcView:generateMenus(issues)
 
-   monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
    unpluggedKeyboard = false
    unpluggedMouse    = false
    unpluggedScreen   = false
@@ -78,9 +77,10 @@ function PcView:generateMenus(issues)
    hardDriveFull     = false
    verNumDisabled    = false
    mouseDisabled     = false
-   internetDisabled  = false
    printingDisabled  = false
    registerDisabled  = false
+   manyToolbars      = false
+   virus             = false
 
    i = 0
    for v in all(self.issues) do
@@ -106,23 +106,27 @@ function PcView:generateMenus(issues)
 	 end
 
 	 if i == 5 then
-	    internetDisabled = true
-	 end
-
-	 if i == 6 then
 	    printingDisabled = true
 	 end
 
-	 if i == 7 then
+	 if i == 6 then
 	    registerDisabled = true
 	 end
 
-	 if i == 9 then
+	 if i == 8 then
 	    hardDriveFull = true
 	 end
 
-	 if i == 10 then
+	 if i == 9 then
 	    verNumDisabled = true
+	 end
+
+	 if i == 10 then
+	    manyToolbars = true
+	 end
+
+	 if i == 11 then
+	    virus = true
 	 end
 
       end
@@ -139,15 +143,24 @@ function PcView:generateMenus(issues)
 
    settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID)
    settingsMenu:addSetting("enable mouse", not mouseDisabled, true)
-   -- settingsMenu:addSetting("enable internet", not internetDisabled, true)
    settingsMenu:addSetting("enable printing", not printingDisabled, true)
    settingsMenu:addSetting("enable register 0x587", not registerDisabled, true)
    add(self.menus, settingsMenu)
 
+   monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
    monitoringMenu:addSetting("internet status", not unpluggedEthernet, false)
    monitoringMenu:addSetting("hard drive full", not hardDriveFull, false)
    monitoringMenu:addSetting("ver num status", not verNumDisabled, true)
    add(self.menus, monitoringMenu)
+
+   filesMenu = FilesMenu:new(not hardDriveFull)
+   add(self.menus, filesMenu)
+   
+   browserMenu = BrowserMenu:new(not manyToolbars)
+   add(self.menus, browserMenu)
+
+   avastMenu = AvastMenu:new(not virus)
+   add(self.menus, avastMenu)
 
 end
 
@@ -162,9 +175,9 @@ function PcView:setCurrentMenu(menuId)
 end
 
 
-function PcView:update()
+function PcView:update(t)
    oldMenuId = self.currentMenu.id
-   menuId = self.currentMenu:update(self.issues)
+   menuId = self.currentMenu:update(self.issues, t)
 
    if menuId == -1 then
       return -1
@@ -261,12 +274,12 @@ function generateIssues(nbIssues)
    issues = {}
 
    -- | physical | settings | monitoring | browser | virus|
-   --   1 1 1 1    1 1 1       1 1 1        1       11
+   --   1 1 1 1    1 1 1       1 1 1        1       1
    -- Physical   : unplugged keyboard, unplugged mouse, unplugged screen, unplugged ethernet cable
    -- settings   : enable mouse, enable printing, enable register
    -- monitoring : no internet, hard drive full, ver.num
    -- browser    : many toolbars
-   -- virus      : pron ads, ransomware
+   -- virus      : pron ads, ransomware (one setting, running avast clears it)
 
 
    -- total_nb_issues = nb_physical_issues + nb_settings_issues + nb_monitoring_issues + nb_browser_issues + nb_virus_issues
@@ -291,7 +304,6 @@ function generateIssues(nbIssues)
 	 add(issues, 1)
       end
    end
-   -- cls()
-   -- print(issues_str)
+
    return issues
 end

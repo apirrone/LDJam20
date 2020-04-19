@@ -118,7 +118,7 @@ function DesktopMenu:new(issues)
    return desktopMenu
 end
 
-function DesktopMenu:update(issues)
+function DesktopMenu:update(issues, t)
    self.issues = issues
    newPos = {}
    newPos.x = self.cursor.pos.x
@@ -302,7 +302,7 @@ function SettingsMenu:addSetting(text, status, togglable)
    add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable))
 end
 
-function SettingsMenu:update()
+function SettingsMenu:update(issues, t)
    newPos = {}
    newPos.x = self.cursor.pos.x
    newPos.y = self.cursor.pos.y
@@ -422,7 +422,7 @@ function CablesMenu:addSetting(text, status, togglable)
    add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable))
 end
 
-function CablesMenu:update()
+function CablesMenu:update(issues, t)
    selectedMenuId = self.id
 
    newPos = {}
@@ -520,4 +520,161 @@ function CablesMenu:isValidPos(x, y)
 
 
    return retVal
+end
+
+
+-- ============================================================================================
+
+
+FilesMenu = {}
+
+function FilesMenu:new()
+   local filesMenu = setmetatable({}, { __index = FilesMenu})
+   
+   filesMenu.id = FILES_MENU_ID
+
+   
+   filesMenu.files = {}
+   filesMenu.icons = {}
+   filesMenu.spacing = 10
+
+   filesMenu.cursor = Cursor:new(4.2, 1, filesMenu.spacing)
+   
+   return filesMenu
+end
+
+function FilesMenu:update(issues, t)
+   selectedMenuId = self.id
+   
+   if (btnp(⬅️)) then
+      selectedMenuId = DESKTOP_MENU_ID
+   end
+   
+
+   return selectedMenuId
+end
+
+function FilesMenu:addFile(text)
+   
+   add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 210, self.spacing))
+
+   add(self.files, Setting:new(text, #self.icons, true, self.spacing, true))
+end
+
+function FilesMenu:draw()
+   spr(192, 7, 8, 1, 1)
+   print("files", 18, 10)
+   -- print("press x to run virus scan", 7, 30)
+
+   rectfill(6, 109, 121, 121, 5)
+   print("suppress : \151", 7, 110, 15)
+   print("browse : \148\131", 7, 116, 15)
+   print("go back : \139", 74, 116, 15)
+end
+
+
+-- ============================================================================================
+
+
+BrowserMenu = {}
+
+function BrowserMenu:new()
+   local browserMenu = setmetatable({}, { __index = BrowserMenu})
+   
+   browserMenu.id = BROWSER_MENU_ID
+
+   
+   browserMenu.settings = {}
+   browserMenu.icons = {}
+   browserMenu.spacing = 10
+
+   browserMenu.cursor = Cursor:new(4.2, 1, browserMenu.spacing)
+   
+   return browserMenu
+end
+
+function BrowserMenu:update(issues, t)
+   selectedMenuId = self.id
+   
+   if (btnp(⬅️)) then
+      selectedMenuId = DESKTOP_MENU_ID
+   end
+   
+
+   return selectedMenuId
+end
+
+function BrowserMenu:addSettings(text)
+   
+   add(self.icons, Icon:new(#self.icons+1, 10, #self.icons+1, 210, self.spacing))
+
+   add(self.settings, Setting:new(text, #self.icons, true, self.spacing, true))
+end
+
+function BrowserMenu:draw()
+
+   spr(194, 7, 8, 1, 1)
+   print("internet explorator", 18, 10)
+
+   rectfill(6, 109, 121, 121, 5)
+   print("suppress : \151", 7, 110, 15)
+   print("browse : \148\131", 7, 116, 15)
+   print("go back : \139", 74, 116, 15)
+end
+
+
+
+-- ============================================================================================
+
+
+AvastMenu = {}
+
+function AvastMenu:new(virus)
+   local avastMenu = setmetatable({}, { __index = AvastMenu})
+   
+   avastMenu.id = AVAST_MENU_ID
+
+   avastMenu.settings = {}
+   avastMenu.scanning = false
+   avastMenu.scanStartTime = 0
+   add(self.settings, Setting:new("", 0, virus, 0, true))
+   return avastMenu
+end
+
+function AvastMenu:update(issues, t)
+   selectedMenuId = self.id
+   
+   if (btnp(⬅️)) then
+      selectedMenuId = DESKTOP_MENU_ID
+   end
+
+   if (btnp(5) and not self.scanning) then -- X
+      self.scanning = true
+      self.scanStartTime = t
+   end
+
+   if (t - self.scanStartTime > 2000) then
+      self.scanning = false
+      for v in all(self.settings) do
+	 v.status = true
+      end
+   end
+
+   
+   
+   return selectedMenuId
+end
+
+
+function AvastMenu:draw(t)
+   spr(202, 7, 8, 1, 1)
+   print("avost", 18, 10)
+   print("press x to run virus scan", 7, 30)
+
+   if self.scanning then
+      print("Scanning, please wait ...", 15, 50)
+   end
+   rectfill(6, 109, 121, 121, 5)
+   print("scan : \151", 7, 116, 15)
+   print("go back : \139", 74, 116, 15)
 end
