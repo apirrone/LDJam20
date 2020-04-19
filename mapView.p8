@@ -18,6 +18,26 @@ function MapView:addNPC(npc)
    add(self.NPCs, npc)
 end
 
+
+function is_pc(x,y)
+   return fget(mget(x,y), 6)
+end
+
+function MapView:scan_pcs()
+
+   pc_list = {}
+
+   for i=0, flr(self.size.w/8) do
+      for j=0, flr(self.size.h/8) do
+         if(is_pc(i,j)) then
+            add(pc_list, {x=i,y=j})
+         end
+      end
+   end
+
+   return pc_list
+end
+
 function MapView:updateCamera()
    //camera() parameters take left top corner
    camX = self.player.pos.x - 64;
@@ -39,12 +59,15 @@ function MapView:update()
 end
 
 function MapView:toggle_pc()
-   return btnp(5) and self.player:in_front_pc()
+   value = self.player:in_front_pc()
+   value.val = btnp(5) and value.val
+
+   return value
 end
 
 function MapView:draw(t)
 
-   map(0,0,0,0,200,200)
+   map(0,0,0,0,self.size.w,self.size.h)
    self.player:draw(t)
    for npc in all(self.NPCs) do
       npc:draw()

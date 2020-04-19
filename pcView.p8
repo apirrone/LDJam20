@@ -1,3 +1,21 @@
+pico-8 cartridge // http://www.pico-8.com
+version 21
+__lua__
+
+PC = {}
+
+function PC:new(x,y, nbIssues)
+   local pc = setmetatable({}, { __index = PC})
+
+   pc.pos = {}
+   pc.pos.x = x
+   pc.pos.y = y
+
+   pc.issues = generateIssues(nbIssues)
+   return pc
+end
+
+
 NB_PHYSICAL_ISSUES = 4
 NB_SETTINGS_ISSUES = 4
 NB_MONITORING_ISSUES = 3
@@ -7,37 +25,36 @@ TOTAL_NB_ISSUES = NB_PHYSICAL_ISSUES + NB_SETTINGS_ISSUES + NB_MONITORING_ISSUES
 
 PcView = {}
 
-function PcView:new(ticketId, nbIssues)
+function PcView:new(issues)
    local pcView = setmetatable({}, { __index = PcView})
 
-   pcView.ticketId = ticketId
-
    pcView.allOk = false
-   issues = generateIssues(nbIssues)
 
-   
    pcView.menus = {}
    add(pcView.menus, DesktopMenu:new(issues))
 
-   
-   pcView:generateMenus(issues)   
-   
-   
+   pcView:generateMenus(issues)
+
+
    i = 0
    for v in all(pcView.menus) do
 
       if v.id == 0 then
 	 pcView.currentMenu = v
       end
-      
+
       i+=1
    end
-   
+
    return pcView
 end
 
+function PcView:loadIssues(issues)
+ -- TODO : à remplir j'ai peur de tout casser
+end
+
 function PcView:generateMenus(issues)
-   
+
    monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
    unpluggedKeyboard = false
    unpluggedMouse    = false
@@ -49,22 +66,22 @@ function PcView:generateMenus(issues)
    internetDisabled  = false
    printingDisabled  = false
    registerDisabled  = false
-   
+
    i = 0
    for v in all(issues) do
       if v == 0 then
 	 if i == 0 then
 	    unpluggedKeyboard = true
 	 end
-	 
+
 	 if i == 1 then
 	    unpluggedMouse = true
 	 end
-	 
+
 	 if i == 2 then
 	    unpluggedScreen = true
 	 end
-	 
+
 	 if i == 3 then
 	    unpluggedEthernet = true
 	 end
@@ -72,19 +89,19 @@ function PcView:generateMenus(issues)
 	 if i == 4 then
 	    mouseDisabled = true
 	 end
-	 
+
 	 if i == 5 then
 	    internetDisabled = true
 	 end
-	 
+
 	 if i == 6 then
 	    printingDisabled = true
 	 end
-	 
+
 	 if i == 7 then
 	    registerDisabled = true
 	 end
-	 
+
 	 if i == 9 then
 	    hardDriveFull = true
 	 end
@@ -92,12 +109,12 @@ function PcView:generateMenus(issues)
 	 if i == 10 then
 	    verNumDisabled = true
 	 end
-	 
+
       end
-      
+
       i+=1
    end
-   
+
    monitoringMenu:addSetting("internet status", not unpluggedEthernet, false)
    monitoringMenu:addSetting("hard drive full", not hardDriveFull, false)
    monitoringMenu:addSetting("ver num status", not verNumDisabled, true)
@@ -120,24 +137,24 @@ function PcView:generateMenus(issues)
 end
 
 function PcView:setCurrentMenu(menuId)
-   
+
    for v in all(self.menus) do
       if v.id == menuId then
 	 self.currentMenu = v
       end
    end
-   
+
 end
-   
+
 
 function PcView:update()
    oldMenuId = self.currentMenu.id
    menuId = self.currentMenu:update()
-   
+
    if menuId == -1 then
       return -1
    end
-   
+
    self:setCurrentMenu(menuId)
    if oldMenuId != self.currentMenu.id then
 
@@ -153,18 +170,18 @@ function PcView:update()
    end
 
    return 1
-	 
-   
-   
+
+
+
 end
 
 function PcView:draw(t)
    rectfill(0, 0, 127, 127, 13)
-   
+
    for i=0, 5, 1 do
       rect(i, i, 127-i, 127-i, 6)
    end
-   
+
    rectfill(39, 124, 89, 125, 0)
 
    self.currentMenu:draw()
@@ -191,13 +208,13 @@ function generateIssues(nbIssues)
    -- monitoring : no internet, hard drive full, ver.num
    -- browser    : many toolbars
    -- virus      : pron ads, ransomware
-   
+
 
    -- total_nb_issues = nb_physical_issues + nb_settings_issues + nb_monitoring_issues + nb_browser_issues + nb_virus_issues
 
    issues_str = ""
    issuesIndex = {}
-   
+
    for i=0, nbIssues-1, 1 do
       add(issuesIndex, flr(rnd(TOTAL_NB_ISSUES)))
    end
@@ -220,6 +237,5 @@ function generateIssues(nbIssues)
    -- cls()
    -- print(issues_str)
    return issues
-   
+
 end
- 

@@ -53,21 +53,36 @@ function collide_flag(hitbox, flag)
    x1 = flr(hitbox.x1/8)
    y1 = flr(hitbox.y1/8)
 
-   return is_flag(x0,y0, flag) or is_flag(x0,y1, flag) or is_flag(x1,y0, flag) or is_flag(x1,y1, flag)
+   retval = {val=false, coords={x=0, y=0} }
+
+   retval.val =  is_flag(x0,y0, flag) or is_flag(x0,y1, flag) or is_flag(x1,y0, flag) or is_flag(x1,y1, flag)
+
+   if(retval.val) then
+      if is_flag(x0,y0, flag) then retval.coords = {x=x0,y=y0} end
+      if is_flag(x0,y1, flag) then retval.coords = {x=x0,y=y1} end
+      if is_flag(x1,y0, flag) then retval.coords = {x=x1,y=y0} end
+      if is_flag(x1,y1, flag) then retval.coords = {x=x1,y=y1} end
+   end
+
+   return retval
 end
 
 function collide_wall(hitbox)
-   return collide_flag(hitbox,7)
+   return collide_flag(hitbox,7).val
 end
 
 function Character:in_front_pc()
 
-    if(self.currentAnimation == self.animations.walkRightAnimation) then
+   retval = {val = false, coords = {x=0, y=0}}
+   if(self.currentAnimation == self.animations.walkRightAnimation) then
       hitbox = { x0 = self.pos.x +1 , y0 = self.pos.y + 13, x1 = self.pos.x + 7, y1 = self.pos.y + 15}
-      return collide_flag(hitbox, 5)
-    end
+      retval =  collide_flag(hitbox, 5)
+      if(retval.val) then
+         retval.coords = {x= retval.coords.x + 1, y=retval.coords.y - 1} -- chair to PC
+      end
+   end
 
-    return false
+    return retval
 end
 
 function Character:update(mapView)

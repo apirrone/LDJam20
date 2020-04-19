@@ -23,7 +23,19 @@ function _init()
    -- ticketsView:addTicket("5 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
    -- ticketsView:addTicket("6 bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere")
 
-   pcView = PcView:new(ticketId, 2)
+
+   pc_coords = mapView:scan_pcs()
+   pc_list = {}
+   for a,b in ipairs(pc_coords) do
+      for i,v in pairs(b) do
+         printh(i.." "..v)
+      end
+      add(pc_list, PC:new(b.x, b.y, rnd(TOTAL_NB_ISSUES)))
+      printh("-")
+   end
+
+   current_pc = pc_list[1]
+   pcView = PcView:new(current_pc.issues)
 
    currentView = mapView
 
@@ -58,12 +70,23 @@ function _update60()
    --    elseif viewCycle == 2 then
    -- 	 currentView = pcView
    --    end
-      
+
    -- end
 
-   if(currentView == mapView and mapView:toggle_pc()) then
-      currentView = pcView
-      camera(0,0)
+   if(currentView == mapView) then
+      toggle_pc = mapView:toggle_pc()
+      if(toggle_pc.val) then
+         currentView = pcView
+         camera(0,0)
+
+         printh("PC pos "..toggle_pc.coords.x.." "..toggle_pc.coords.y)
+         for i = 1, #pc_list do
+            if(pc_list[i].pos.x == toggle_pc.coords.x and pc_list[i].pos.y == toggle_pc.coords.y) then
+               pcView:loadIssues(current_pc.issues)
+               printh("Trouve")
+            end
+         end
+      end
    end
 
    -- if currentView != oldView then
