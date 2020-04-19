@@ -3,7 +3,7 @@ NB_SETTINGS_ISSUES = 4
 NB_MONITORING_ISSUES = 3
 NB_BROWSER_ISSUES = 1
 NB_VIRUS_ISSUES = 2
-TOTAL_NB_ISSUES = NB_PHYSICAL_ISSUES * NB_SETTINGS_ISSUES * NB_MONITORING_ISSUES * NB_BROWSER_ISSUES * NB_VIRUS_ISSUES
+TOTAL_NB_ISSUES = NB_PHYSICAL_ISSUES + NB_SETTINGS_ISSUES + NB_MONITORING_ISSUES + NB_BROWSER_ISSUES + NB_VIRUS_ISSUES
 
 PcView = {}
 
@@ -11,11 +11,14 @@ function PcView:new(ticketId, nbIssues)
    local pcView = setmetatable({}, { __index = PcView})
 
    pcView.ticketId = ticketId
+
+
+   issues = generateIssues(nbIssues)
    
    pcView.menus = {}
-   add(pcView.menus, DesktopMenu:new())
-
-   pcView:generateMenus(nbIssues)   
+   add(pcView.menus, DesktopMenu:new(issues))
+   
+   pcView:generateMenus(issues)   
    
    i = 0
    for v in all(pcView.menus) do
@@ -30,22 +33,66 @@ function PcView:new(ticketId, nbIssues)
    return pcView
 end
 
-function PcView:generateMenus(nbIssues)
-   
-   issues = generateIssues(nbIssues)
+function PcView:generateMenus(issues)
    
    monitoringMenu = SettingsMenu:new(MONITORING_MENU_ID)
-   monitoringMenu:addSetting("internet status", true, false)
-   monitoringMenu:addSetting("hard drive status", true, false)
-   monitoringMenu:addSetting("ver num status", true, false)
+
+   unpluggedEthernet = false
+   hardDriveFull = false
+   verNumDisabled = false
+   mouseDisabled = false
+   internetDisabled = false
+   printingDisabled = false
+   registerDisabled = false
+   
+   i = 0
+   for v in all(issues) do
+      if v == 0 then
+	 if i == 3 then
+	    unpluggedEthernet = true
+	 end
+
+	 if i == 4 then
+	    mouseDisabled = true
+	 end
+	 
+	 if i == 5 then
+	    internetDisabled = true
+	 end
+	 
+	 if i == 6 then
+	    printingDisabled = true
+	 end
+	 
+	 if i == 7 then
+	    registerDisabled = true
+	 end
+
+	 
+	 
+	 if i == 9 then
+	    hardDriveFull = true
+	 end
+
+	 if i == 10 then
+	    verNumDisabled = true
+	 end
+	 
+      end
+      
+      i+=1
+   end
+   
+   monitoringMenu:addSetting("internet status", not unpluggedEthernet, false)
+   monitoringMenu:addSetting("hard drive full", not hardDriveFull, false)
+   monitoringMenu:addSetting("ver num status", not verNumDisabled, true)
    add(self.menus, monitoringMenu)
 
    settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID)
-   settingsMenu:addSetting("enable mouse", true, true)
-   settingsMenu:addSetting("enable internet", true, true)
-   settingsMenu:addSetting("enable printing", true, true)
-   settingsMenu:addSetting("enable register 0x587", true, true)
-
+   settingsMenu:addSetting("enable mouse", not mouseDisabled, true)
+   settingsMenu:addSetting("enable internet", not internetDisabled, true)
+   settingsMenu:addSetting("enable printing", not printingDisabled, true)
+   settingsMenu:addSetting("enable register 0x587", not registerDisabled, true)
    add(self.menus, settingsMenu)
 end
 
@@ -101,7 +148,7 @@ function generateIssues(nbIssues)
    for i=0, nbIssues-1, 1 do
       add(issuesIndex, flr(rnd(TOTAL_NB_ISSUES)))
    end
-   
+
    for i=0, TOTAL_NB_ISSUES, 1 do
       issue = false
       for v in all(issuesIndex) do
@@ -110,13 +157,16 @@ function generateIssues(nbIssues)
 	 end
       end
       if issue then
+	 add(issues, 0)
 	 issues_str = issues_str.."0"
       else
+	 add(issues, 1)
 	 issues_str = issues_str.."1"
       end
    end
-
-   return issues_str
+   -- cls()
+   -- print(issues_str)
+   return issues
    
 end
  

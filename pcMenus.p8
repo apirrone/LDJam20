@@ -87,10 +87,42 @@ end
 
 DesktopMenu = {}
 
-function DesktopMenu:new()
+function DesktopMenu:new(issues)
 
    local desktopMenu = setmetatable({}, { __index = DesktopMenu})
 
+   desktopMenu.issues = issues
+
+   desktopMenu.unpluggedKeyboard = false
+   desktopMenu.unpluggedMouse = false
+   desktopMenu.unpluggedScreen = false
+   desktopMenu.unpluggedEthernet = false
+
+   i = 0
+   for v in all(desktopMenu.issues) do
+      if v == 0 then
+	 
+	 if i == 0 then
+	    desktopMenu.unpluggedKeyboard = true
+	 end
+	 
+	 if i == 1 then
+	    desktopMenu.unpluggedMouse = true
+	 end
+	 
+	 if i == 2 then
+	    desktopMenu.unpluggedScreen = true
+	 end
+
+	 if i == 3 then
+	    desktopMenu.unpluggedEthernet = true
+	 end
+	 
+      end
+      i+=1
+   end
+
+   
    desktopMenu.id = DESKTOP_MENU_ID
    
    desktopMenu.icons = {}
@@ -120,48 +152,55 @@ function DesktopMenu:update()
    newPos.x = self.cursor.pos.x
    newPos.y = self.cursor.pos.y
 
-   selectedMenuId = 0   
-   if (btnp(⬆️)) then
-      newPos.y -= 1
-   elseif (btnp(⬇️)) then
-      newPos.y += 1
-   end
+   selectedMenuId = 0
 
-   if (btnp(⬅️)) then
-      newPos.x -= 1
-   elseif (btnp(➡️)) then
-      newPos.x += 1
-   end
-
-   if (btnp(5)) then -- X
-      selectedMenuId = self.cursor.currentIndex
-   end
+   if (not self.unpluggedMouse) and (not self.unpluggedKeyboard) then
    
-   tmpIndex = self:isValidPos(newPos.x, newPos.y)
-   if tmpIndex then
-      self.cursor.pos = newPos
-      self.cursor.currentIndex = tmpIndex
-   end
+      if (btnp(⬆️)) then
+	 newPos.y -= 1
+      elseif (btnp(⬇️)) then
+	 newPos.y += 1
+      end
 
+      if (btnp(⬅️)) then
+	 newPos.x -= 1
+      elseif (btnp(➡️)) then
+	 newPos.x += 1
+      end
+
+      if (btnp(5)) then -- X
+	 selectedMenuId = self.cursor.currentIndex
+      end
+   
+      tmpIndex = self:isValidPos(newPos.x, newPos.y)
+      if tmpIndex then
+	 self.cursor.pos = newPos
+	 self.cursor.currentIndex = tmpIndex
+      end
+   end
    return selectedMenuId
 end
 
 
 function DesktopMenu:draw()
-   for v in all(self.icons) do
-      v:draw()
+   if not self.unpluggedScreen then
+      for v in all(self.icons) do
+	 v:draw()
+      end
+   
+      rectfill(6, 109, 121, 121, 5)
+
+      print("lucarne 98", 82, 103, 2)
+
+      self.cursor:draw()
+      print(self.cursor.currentIndex, 0, 0)
+   
+      print("select : \151", 7, 110, 15)
+      print("browse : \148\131\139\145", 7, 116, 15)
+      print("exit : \142", 86, 116, 15)
+   else
+      print("NO SIGNAL", 10, 10)
    end
-   
-   rectfill(6, 109, 121, 121, 5)
-
-   print("lucarne 98", 82, 103, 2)
-
-   self.cursor:draw()
-   print(self.cursor.currentIndex, 0, 0)
-   
-   print("select : \151", 7, 110, 15)
-   print("browse : \148\131\139\145", 7, 116, 15)
-   print("exit : \142", 86, 116, 15)
 end
 
 function DesktopMenu:isValidPos(x, y)
