@@ -58,11 +58,8 @@ function MapView:update()
    self:updateCamera()
 end
 
-function MapView:toggle_pc()
-   value = self.player:in_front_pc()
-   value.val = btnp(5) and value.val
-
-   return value
+function MapView:can_toggle_pc()
+   return self.player:in_front_pc()
 end
 
 function MapView:draw(t)

@@ -37,7 +37,7 @@ function PcView:loadIssues(issues)
 
 
 
-   
+
    self.issues = issues --generateIssues(nbIssues)
 
    self.menus = {}
@@ -45,16 +45,16 @@ function PcView:loadIssues(issues)
 
    self:generateMenus(self.issues)
 
-   
+
    self.allOk = true
    for v in all(self.menus) do
       for vv in all(v.settings) do
 	 if not vv.status then
 	    self.allOk = false
-	 end	 
+	 end
       end
    end
-   
+
 
    i = 0
    for v in all(self.menus) do
@@ -65,7 +65,7 @@ function PcView:loadIssues(issues)
 
       i+=1
    end
-   
+
 end
 
 function PcView:generateMenus(issues)
@@ -155,7 +155,7 @@ function PcView:generateMenus(issues)
 
    filesMenu = FilesMenu:new(not hardDriveFull)
    add(self.menus, filesMenu)
-   
+
    browserMenu = BrowserMenu:new(not manyToolbars)
    add(self.menus, browserMenu)
 
@@ -294,14 +294,14 @@ function generateIssues(nbIssues)
    for i=0, TOTAL_NB_ISSUES, 1 do
       issue = false
       for v in all(issuesIndex) do
-	 if i == v then
-	    issue = true
-	 end
+         if i == v then
+            issue = true
+         end
       end
       if issue then
-	 add(issues, 0)
+         add(issues, 0)
       else
-	 add(issues, 1)
+	      add(issues, 1)
       end
    end
 
