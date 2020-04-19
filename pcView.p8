@@ -17,7 +17,7 @@ end
 
 
 NB_PHYSICAL_ISSUES = 4
-NB_SETTINGS_ISSUES = 4
+NB_SETTINGS_ISSUES = 3
 NB_MONITORING_ISSUES = 3
 NB_BROWSER_ISSUES = 1
 NB_VIRUS_ISSUES = 2
@@ -29,11 +29,13 @@ function PcView:new(issues)
    local pcView = setmetatable({}, { __index = PcView})
 
    pcView.allOk = false
+   pcView.issues = issues --generateIssues(nbIssues)
 
    pcView.menus = {}
-   add(pcView.menus, DesktopMenu:new(issues))
+   add(pcView.menus, DesktopMenu:new(pcView.issues))
 
-   pcView:generateMenus(issues)
+
+   pcView:generateMenus(pcView.issues)
 
 
    i = 0
@@ -68,7 +70,7 @@ function PcView:generateMenus(issues)
    registerDisabled  = false
 
    i = 0
-   for v in all(issues) do
+   for v in all(self.issues) do
       if v == 0 then
 	 if i == 0 then
 	    unpluggedKeyboard = true
@@ -115,25 +117,25 @@ function PcView:generateMenus(issues)
       i+=1
    end
 
-   monitoringMenu:addSetting("internet status", not unpluggedEthernet, false)
-   monitoringMenu:addSetting("hard drive full", not hardDriveFull, false)
-   monitoringMenu:addSetting("ver num status", not verNumDisabled, true)
-   add(self.menus, monitoringMenu)
-
-   settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID)
-   settingsMenu:addSetting("enable mouse", not mouseDisabled, true)
-   settingsMenu:addSetting("enable internet", not internetDisabled, true)
-   settingsMenu:addSetting("enable printing", not printingDisabled, true)
-   settingsMenu:addSetting("enable register 0x587", not registerDisabled, true)
-   add(self.menus, settingsMenu)
-
    cablesMenu = CablesMenu:new()
    cablesMenu:addSetting("unplugged keyboard", not unpluggedKeyboard, true)
    cablesMenu:addSetting("unplugged mouse", not unpluggedMouse, true)
    cablesMenu:addSetting("unplugged screen", not unpluggedScreen, true)
    cablesMenu:addSetting("unplugged ethernet", not unpluggedEthernet, true)
-
    add(self.menus, cablesMenu)
+
+   settingsMenu = SettingsMenu:new(SETTINGS_MENU_ID)
+   settingsMenu:addSetting("enable mouse", not mouseDisabled, true)
+   -- settingsMenu:addSetting("enable internet", not internetDisabled, true)
+   settingsMenu:addSetting("enable printing", not printingDisabled, true)
+   settingsMenu:addSetting("enable register 0x587", not registerDisabled, true)
+   add(self.menus, settingsMenu)
+
+   monitoringMenu:addSetting("internet status", not unpluggedEthernet, false)
+   monitoringMenu:addSetting("hard drive full", not hardDriveFull, false)
+   monitoringMenu:addSetting("ver num status", not verNumDisabled, true)
+   add(self.menus, monitoringMenu)
+
 end
 
 function PcView:setCurrentMenu(menuId)
@@ -149,7 +151,7 @@ end
 
 function PcView:update()
    oldMenuId = self.currentMenu.id
-   menuId = self.currentMenu:update()
+   menuId = self.currentMenu:update(self.issues)
 
    if menuId == -1 then
       return -1
@@ -157,16 +159,60 @@ function PcView:update()
 
    self:setCurrentMenu(menuId)
    if oldMenuId != self.currentMenu.id then
-
+      reconstructedIssues = {}
       self.allOk = true
       for v in all(self.menus) do
 	 for vv in all(v.settings) do
+	    if vv.status then
+	       add(reconstructedIssues, 1)
+	    else
+	       add(reconstructedIssues, 0)
+	    end
 	    if not vv.status then
 	       self.allOk = false
+
 	    end
 
 	 end
       end
+      ethernetUnPlugged = false
+      self.issues = reconstructedIssues
+      i = 0
+      for v in all(self.issues) do
+	 if i == 3 then -- unplugged ethernet
+	    if v == 0 then
+	       ethernetUnPlugged = true
+	    end
+	 end
+	 i+=1
+      end
+
+      i = 0
+      for v in all(self.menus) do
+
+      	 if i == 3 then -- monitoringMenu
+      	    j = 0
+      	    for vv in all(v.settings) do
+
+      	       if j == 0 then
+      		  vv.status = not ethernetUnPlugged -- TODO BUGGY
+      	       end
+      	       j+=1
+      	    end
+      	 end
+      	 i += 1
+      end
+
+
+      -- DEBUG
+      -- for v in all(reconstructedIssues) do
+      -- 	 printh(v)
+      -- end
+      -- printh("-----------------------------")
+      -- for v in all(self.issues) do
+      -- 	 printh(v)
+      -- end
+      -- printh("===========")
    end
 
    return 1
@@ -202,9 +248,9 @@ function generateIssues(nbIssues)
    issues = {}
 
    -- | physical | settings | monitoring | browser | virus|
-   --   1 1 1 1    1 1 1 1       1 1 1        1       11
+   --   1 1 1 1    1 1 1       1 1 1        1       11
    -- Physical   : unplugged keyboard, unplugged mouse, unplugged screen, unplugged ethernet cable
-   -- settings   : enable mouse, enable internet, enable printing, enable register
+   -- settings   : enable mouse, enable printing, enable register
    -- monitoring : no internet, hard drive full, ver.num
    -- browser    : many toolbars
    -- virus      : pron ads, ransomware
@@ -228,14 +274,11 @@ function generateIssues(nbIssues)
       end
       if issue then
 	 add(issues, 0)
-	 issues_str = issues_str.."0"
       else
 	 add(issues, 1)
-	 issues_str = issues_str.."1"
       end
    end
    -- cls()
    -- print(issues_str)
    return issues
-
 end

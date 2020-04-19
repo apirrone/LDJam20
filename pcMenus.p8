@@ -118,7 +118,8 @@ function DesktopMenu:new(issues)
    return desktopMenu
 end
 
-function DesktopMenu:update()
+function DesktopMenu:update(issues)
+   self.issues = issues
    newPos = {}
    newPos.x = self.cursor.pos.x
    newPos.y = self.cursor.pos.y
@@ -327,12 +328,6 @@ function SettingsMenu:update()
 	       if vv.iconIndex == v.index then
 		  if vv.togglable then
 		     vv.status = not vv.status
-		     	    
-		     if v.spriteId == 204 then
-			v.spriteId = 205
-		     else
-			v.spriteId = 204
-		     end
 		  end
 	       end
 	    end
@@ -340,6 +335,22 @@ function SettingsMenu:update()
 	 end
       end
    end
+   
+   
+   for v in all(self.icons) do
+      i = 1
+      for vv in all(self.settings) do
+	 if v.index == i then
+	    if vv.status then
+	       v.spriteId = 205
+	    else
+	       v.spriteId = 204
+	    end
+	 end
+	 i+=1
+      end
+   end
+
    
    tmpIndex = self:isValidPos(newPos.x, newPos.y)
    if tmpIndex then
@@ -397,15 +408,15 @@ function CablesMenu:new()
    cablesMenu.id = CABLES_MENU_ID
    cablesMenu.spacing = 15
 
-   cablesMenu.cursor = Cursor:new(5, 1, cablesMenu.spacing)
+   cablesMenu.cursor = Cursor:new(4.2, 1, cablesMenu.spacing)
    return cablesMenu
 end
 
 function CablesMenu:addSetting(text, status, togglable)
    if status then
-      add(self.icons, Icon:new(#self.icons+1, 5, #self.icons+1, 208, self.spacing))
+      add(self.icons, Icon:new(#self.icons+1, 4.2, #self.icons+1, 209, self.spacing))
    else
-      add(self.icons, Icon:new(#self.icons+1, 5, #self.icons+1, 204, self.spacing))
+      add(self.icons, Icon:new(#self.icons+1, 4.2, #self.icons+1, 208, self.spacing))
    end
    
    add(self.settings, Setting:new(text, #self.icons, status, self.spacing, togglable))
@@ -432,18 +443,26 @@ function CablesMenu:update()
 	       if vv.iconIndex == v.index then
 		  if vv.togglable then
 		     vv.status = not vv.status
-		     	    
-		     if v.spriteId == 204 then
-			v.spriteId = 208
-		     else
-			v.spriteId = 204
-		     end
 		  end
 	       end
 	    end
-
 	 end
       end
+
+      for v in all(self.icons) do
+	 i = 1
+	 for vv in all(self.settings) do
+	    if v.index == i then
+	       if vv.status then
+		  v.spriteId = 209
+	       else
+		  v.spriteId = 208
+	       end
+	    end
+	    i+=1
+	 end
+      end
+      
    end
    
    tmpIndex = self:isValidPos(newPos.x, newPos.y)
@@ -464,10 +483,26 @@ function CablesMenu:draw()
    rectfill(0, 0, 128, 128, 13)
    rectfill(6, 109, 121, 121, 5)
 
+   line(24, 16, 74, 16, 5)
+   line(23, 17, 73, 17, 5)
+   line(22, 18, 72, 18, 5)
+   line(21, 19, 71, 19, 5)
+   
+   line(74, 16, 74, 76, 5)   
+   line(73, 17, 73, 77, 5)   
+   line(72, 18, 72, 78, 5)   
+   line(71, 19, 71, 79, 5)
+   rectfill(20, 20, 70, 80, 6)
+   print("bell", 25, 25, 0)
+   print("optitron", 25, 31, 0)
+   print("7764", 25, 37, 0)
+   
    for v in all(self.icons) do
       v:draw()
    end
    self.cursor:draw()
+
+
    
    print("toggle : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
@@ -482,6 +517,7 @@ function CablesMenu:isValidPos(x, y)
 	 retVal = v.index
       end
    end
+
 
    return retVal
 end
