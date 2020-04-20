@@ -40,13 +40,7 @@ function startDay()
 
 
 
-
-   pc_coords = mapView:scan_pcs()
-   pc_list = {}
-   for a,b in ipairs(pc_coords) do
-      new_pc = PC:new(b.x, b.y, 0)
-      add(pc_list,new_pc )
-   end
+   pc_list = mapView.pc_list
 
    for i = 1,nb_tickets do
       repeat
@@ -137,10 +131,10 @@ function _update60()
    -- printh(t)
    if t > dayDuration then
       if currentMoney >= moneyGoal then
-	 currentDay += 1
-	 startDay()
+         currentDay += 1
+         startDay()
       else
-	 gameOver = true
+	      gameOver = true
       end
    end
 
