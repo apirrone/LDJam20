@@ -37,7 +37,12 @@ function NPC:new(x,y,w,h,spr_id)
 end
 
 function NPC:draw()
-	spr(self.spr_id,self.pos.x,self.pos.y, self.size.w,self.size.h)
+	if(self.pos.x == self.orig_pos.x) then
+		spr(self.spr_id, self.pos.x, self.pos.y, self.size.w,1)
+		spr(129, self.pos.x, self.pos.y+9)
+	else
+		spr(self.spr_id,self.pos.x,self.pos.y, self.size.w,self.size.h)
+	end
 end
 
 function NPC:update(mapview)
