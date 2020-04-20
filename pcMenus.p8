@@ -312,7 +312,7 @@ function SettingsMenu:update(issues, t)
       newPos.y += 1
    end
 
-   if (btnp(⬅️)) then
+   if (btnp(4)) then
       selectedMenuId = DESKTOP_MENU_ID
    elseif (btnp(➡️)) then
       newPos.x += 1
@@ -377,7 +377,7 @@ function SettingsMenu:draw()
    
    print("toggle : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
-   print("go back : \139", 74, 116, 15)
+   print("go back : \142", 74, 116, 15)
    
 end
 
@@ -470,7 +470,7 @@ function CablesMenu:update(issues, t)
    end
 
    
-   if (btnp(⬅️)) then
+   if (btnp(4)) then
       selectedMenuId = DESKTOP_MENU_ID
    end
 
@@ -504,7 +504,7 @@ function CablesMenu:draw()
    
    print("toggle : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
-   print("go back : \139", 74, 116, 15)
+   print("go back : \142", 74, 116, 15)
 end
 
 
@@ -604,7 +604,7 @@ function FilesMenu:update(issues, t)
       newPos.y += 1
    end
    
-   if (btnp(⬅️)) then
+   if (btnp(4)) then
       selectedMenuId = DESKTOP_MENU_ID
    end
 
@@ -680,7 +680,7 @@ function FilesMenu:draw()
    rectfill(6, 109, 121, 121, 5)
    print("suppress : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
-   print("go back : \139", 74, 116, 15)
+   print("go back : \142", 74, 116, 15)
 end
 
 
@@ -756,7 +756,7 @@ function BrowserMenu:update(issues, t)
       newPos.y += 1
    end
    
-   if (btnp(⬅️)) then
+   if (btnp(4)) then
       selectedMenuId = DESKTOP_MENU_ID
    end
 
@@ -853,7 +853,7 @@ function BrowserMenu:draw(t)
    rectfill(6, 109, 121, 121, 5)
    print("suppress : \151", 7, 110, 15)
    print("browse : \148\131", 7, 116, 15)
-   print("go back : \139", 74, 116, 15)
+   print("go back : \142", 74, 116, 15)
 end
 
 
@@ -878,7 +878,7 @@ end
 function AvastMenu:update(issues, t)
    selectedMenuId = self.id
    
-   if (btnp(⬅️)) then
+   if (btnp(4)) then
       selectedMenuId = DESKTOP_MENU_ID
    end
 
@@ -909,5 +909,5 @@ function AvastMenu:draw(t)
    
    rectfill(6, 109, 121, 121, 5)
    print("scan : \151", 7, 116, 15)
-   print("go back : \139", 74, 116, 15)
+   print("go back : \142", 74, 116, 15)
 end
