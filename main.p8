@@ -6,15 +6,27 @@ __lua__
 dt = null
 t = 0
 
+function is_all_ok(issues)
+   all_ok = true
+   for i in all(issues) do
+      if i == 0 then
+         all_ok = false
+      end
+   end
+
+   return all_ok
+end
+
+
 function _init()
-   
+
    palt(11, true)
    palt(0, false)
-   
+
    mainMenuView = MainMenuView:new()
    currentView = mainMenuView
    currentDay = 1
-   -- startDay()   
+   -- startDay()
 end
 
 function startDay()
@@ -23,18 +35,26 @@ function startDay()
 
    ticketsView = TicketsView:new()
 
+   MAX_TICKETS_PER_DAY = 10
+   nb_tickets =  flr(rnd(MAX_TICKETS_PER_DAY -1)) +1
+
+
+
 
    pc_coords = mapView:scan_pcs()
    pc_list = {}
    for a,b in ipairs(pc_coords) do
-
-      new_pc = PC:new(b.x, b.y, rnd(TOTAL_NB_ISSUES))
+      new_pc = PC:new(b.x, b.y, 0)
       add(pc_list,new_pc )
+   end
 
-      if flr(rnd(10)) == 0 then
-	 ticketId = ticketsView:addTicket("bonjour, mon pc il est \ndead de ouf, c'est trop\nchiant sa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc)
-      end
+   for i = 1,nb_tickets do
+      repeat
+         issued_pc = pc_list[flr(rnd(#pc_list)) +1]
+      until is_all_ok(issued_pc.issues)
 
+      issued_pc:newIssues(flr(rnd(TOTAL_NB_ISSUES -1)) +1)
+      ticketId = ticketsView:addTicket("bonjour, mon pc il est \ndead de ouf, c'est trop\nchiant sa mere.\n\n\n\n\n\n\n\n\n                    micheline", issued_pc)
    end
 
    current_pc = pc_list[1]
@@ -69,11 +89,11 @@ function _update60()
    end
 
 
-   
+
    if gameOver then
       return 0
    end
-   
+
    oldView = currentView
 
    if(currentView == mapView) then
@@ -120,7 +140,7 @@ function _update60()
 	 currentDay += 1
 	 startDay()
       else
-	 gameOver = true	 
+	 gameOver = true
       end
    end
 

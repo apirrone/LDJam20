@@ -16,6 +16,10 @@ function PC:new(x,y, nbIssues)
    return pc
 end
 
+function PC:newIssues(nbIssues)
+   self.issues = generateIssues(nbIssues)
+end
+
 
 NB_PHYSICAL_ISSUES = 4
 NB_SETTINGS_ISSUES = 3
@@ -79,7 +83,7 @@ function PcView:generateMenus()
    mouseDisabled     = (self.issues[5] == 0)
    printingDisabled  = (self.issues[6] == 0)
    registerDisabled  = (self.issues[7] == 0)
-   
+
    hardDriveFull     = (self.issues[9] == 0)
    verNumDisabled    = (self.issues[10] == 0)
    hardDriveFull     = (self.issues[11] == 0)
@@ -155,7 +159,7 @@ function PcView:update(t)
 
 
       self.issues = reconstructedIssues
-      
+
       ethernetUnPlugged = (self.issues[4] == 0)
       hardDriveFull     = (self.issues[11] == 0)
       virus             = (self.issues[13] == 0)

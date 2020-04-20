@@ -16,17 +16,6 @@ function generate_issues_string(issues)
    return str
 end
 
-function is_all_ok(issues)
-   all_ok = true
-   for i in all(issues) do
-      if i == 0 then
-         all_ok = false
-      end
-   end
-
-   return all_ok
-end
-
 
 function Ticket:new(text, index, pc)
    local ticket = setmetatable({}, { __index = Ticket})
@@ -114,33 +103,39 @@ end
 
 function TicketsView:update()
 
-   if (btnp(⬆️)) then
-      if (self.selector.pos > 0) then
-	      self.selector.pos -= 1
+   if(#self.tickets > 0) then
+      if (btnp(⬆️)) then
+         if (self.selector.pos > 0) then
+            self.selector.pos -= 1
+         end
+      elseif (btnp(⬇️)) then
+         if (self.selector.pos < #self.tickets-1) then
+            self.selector.pos += 1
+         end
       end
-   elseif (btnp(⬇️)) then
-      if (self.selector.pos < #self.tickets-1) then
-	      self.selector.pos += 1
-      end
-   end
 
-   if (btnp(⬅️)) then -- show full message
-      self.displayState = 0
-   elseif (btnp(➡️)) then
-      self.displayState = 1
+      if (btnp(⬅️)) then -- show full message
+         self.displayState = 0
+      elseif (btnp(➡️)) then
+         self.displayState = 1
+      end
+
+      if(btnp(5)) then
+         ticket = self.tickets[self.selector.pos + 1]
+         if(is_all_ok(ticket.pc.issues)) then
+            self:removeTicket(ticket)
+         else
+            ticket.highlighted = not ticket.highlighted
+            ticket.pc.highlight = ticket.highlighted
+         end
+      end
+
    end
 
    if(btnp(4)) then
       return -1
-   elseif(btnp(5)) then
-      ticket = self.tickets[self.selector.pos + 1]
-      if(is_all_ok(ticket.pc.issues)) then
-         self:removeTicket(ticket)
-      else
-         ticket.highlighted = not ticket.highlighted
-         ticket.pc.highlight = ticket.highlighted
-      end
    end
+
 
 end
 
@@ -149,27 +144,30 @@ function TicketsView:draw(t)
    rect(1, 1, 126, 126, 5)
    rect(2, 2, 125, 125, 15)
 
-
-   if (self.displayState == 0) then
-      page_size = 7
-      first_t = flr(self.selector.pos /page_size) *page_size + 1
-
-      for i = first_t, min(first_t + 6, #self.tickets) do
-         t = self.tickets[i]
-         t:draw_cropped((i-1)%page_size)
-      end
-
-      self.selector:draw()
-
-      print("full ticket : \145", 5, 118, 15)
-      print("select : \151", 80, 112, 15)
-      print("exit : \142", 88, 118, 15)
+   if(#self.tickets == 0) then
+      print("DAY IS OVER GO WATCH NETFLIX", 6, 61, color)
    else
+      if (self.displayState == 0) then
+         page_size = 7
+         first_t = flr(self.selector.pos /page_size) *page_size + 1
 
-      self.tickets[self.selector.pos + 1]:draw_full()
+         for i = first_t, min(first_t + 6, #self.tickets) do
+            t = self.tickets[i]
+            t:draw_cropped((i-1)%page_size)
+         end
 
-      print("browse : \148\131", 5, 118, 15)
-      print("go back : \139", 76, 118, 15)
+         self.selector:draw()
+
+         print("full ticket : \145", 5, 118, 15)
+         print("select : \151", 80, 112, 15)
+         print("exit : \142", 88, 118, 15)
+      else
+
+         self.tickets[self.selector.pos + 1]:draw_full()
+
+         print("browse : \148\131", 5, 118, 15)
+         print("go back : \139", 76, 118, 15)
+      end
    end
 
 end
