@@ -46,7 +46,7 @@ function startDay()
    productivity = 0
    moneyGoal = 100
    currentMoney = 0
-   dayDuration = 30 -- seconds
+   dayDuration = 240 -- seconds
    gameOver = false
 end
 

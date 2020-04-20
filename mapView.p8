@@ -50,12 +50,14 @@ function MapView:updateCamera()
 end
 
 function MapView:update(t)
-   self.player:update(self)
-   for npc in all(self.NPCs) do
-      npc:update()
-   end
+   if t >= 2 then
+      self.player:update(self)
+      for npc in all(self.NPCs) do
+	 npc:update()
+      end
 
-   self:updateCamera()
+      self:updateCamera()
+   end
 end
 
 function MapView:can_toggle_pc()
