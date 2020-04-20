@@ -82,10 +82,10 @@ function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration, cur
    else
 
       map(0,0,0,0,self.size.w,self.size.h)
-      self.player:draw(t)
       for npc in all(self.NPCs) do
          npc:draw()
       end
+      self.player:draw(t)
 
       for pc in all(self.pc_list) do --weird accessing global like that
          if(pc.highlight) then
