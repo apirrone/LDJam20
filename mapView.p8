@@ -66,6 +66,7 @@ end
 
 function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration, currentDay)
    if t < 2 then
+      camera(0, 0)
       print("day "..currentDay, 55, 50, 1)
    else
 
