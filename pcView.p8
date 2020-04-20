@@ -39,9 +39,9 @@ function PcView:new(issues)
 end
 
 function PcView:loadIssues(issues, start)
-   -- if not start then
-   --    sfx(0)
-   -- end
+   if not start then
+      sfx(0)
+   end
    self.issues = issues --generateIssues(nbIssues)
 
    self.menus = {}

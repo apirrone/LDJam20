@@ -19,7 +19,7 @@ end
 
 
 function _init()
-   -- music(1)
+   music(1)
    palt(11, true)
    palt(0, false)
 
@@ -35,7 +35,7 @@ function startDay()
 
    ticketsView = TicketsView:new()
 
-   MAX_TICKETS_PER_DAY = 10
+   MAX_TICKETS_PER_DAY = 3
    nb_tickets =  flr(rnd(MAX_TICKETS_PER_DAY -1)) +1
 
 
@@ -51,9 +51,9 @@ function startDay()
 
 
    productivity = 0
-   moneyGoal = 100
+   moneyGoal = 60
    currentMoney = 0
-   dayDuration = 300 -- seconds
+   dayDuration = moneyGoal -- seconds
    gameOver = false
 end
 
@@ -63,7 +63,7 @@ function generateTickets(nb_tickets)
          issued_pc = pc_list[flr(rnd(#pc_list)) +1]
       until is_all_ok(issued_pc.issues)
 
-      issued_pc:newIssues(flr(rnd(TOTAL_NB_ISSUES -1)) +1)
+      issued_pc:newIssues(flr(rnd(5 -1)) +1)
       ticketId = ticketsView:addTicket(issued_pc)
    end
 end
@@ -127,22 +127,22 @@ function _update60()
    end
 
 
-   productivity = 1-(#ticketsView.tickets/#pc_list)
+   productivity = 1-(#ticketsView.tickets/(#pc_list/currentDay))
 
    -- if flr(t)%2 == 0 then
-   currentMoney += productivity*0.01
+   currentMoney += 0.02*productivity
    -- end
    -- printh(t)
-   if t > dayDuration then
+   if t > dayDuration or currentMoney > moneyGoal then
       if currentMoney >= moneyGoal then
          currentDay += 1
          startDay()
       else
-	      gameOver = true
+	 gameOver = true
       end
    end
 
-   if t > 2 and flr(rnd(500)) == 0 and (#ticketsView.tickets < #pc_list) then
+   if t > 2 and flr(rnd(800)) == 0 and (#ticketsView.tickets < #pc_list) then
       generateTickets(1)
    end
 
