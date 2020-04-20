@@ -42,14 +42,7 @@ function startDay()
 
    pc_list = mapView.pc_list
 
-   for i = 1,nb_tickets do
-      repeat
-         issued_pc = pc_list[flr(rnd(#pc_list)) +1]
-      until is_all_ok(issued_pc.issues)
-
-      issued_pc:newIssues(flr(rnd(TOTAL_NB_ISSUES -1)) +1)
-      ticketId = ticketsView:addTicket("bonjour, mon pc il est \ndead de ouf, c'est trop\nchiant sa mere.\n\n\n\n\n\n\n\n\n                    micheline", issued_pc)
-   end
+   generateTickets(nb_tickets)
 
    current_pc = pc_list[1]
    pcView = PcView:new(current_pc.issues)
@@ -62,6 +55,17 @@ function startDay()
    currentMoney = 0
    dayDuration = 240 -- seconds
    gameOver = false
+end
+
+function generateTickets(nb_tickets)
+   for i = 1,nb_tickets do
+      repeat
+         issued_pc = pc_list[flr(rnd(#pc_list)) +1]
+      until is_all_ok(issued_pc.issues)
+
+      issued_pc:newIssues(flr(rnd(TOTAL_NB_ISSUES -1)) +1)
+      ticketId = ticketsView:addTicket(issued_pc)
+   end
 end
 
 function _update60()
@@ -81,7 +85,6 @@ function _update60()
 	 return 0
       end
    end
-
 
 
    if gameOver then
@@ -108,6 +111,7 @@ function _update60()
       elseif(btnp(4)) then
          currentView = ticketsView
       end
+
    end
 
 
@@ -136,6 +140,10 @@ function _update60()
       else
 	      gameOver = true
       end
+   end
+
+   if t > 2 and flr(rnd(500)) == 0 and (#ticketsView.tickets < #pc_list) then
+      generateTickets(1)
    end
 
 end
