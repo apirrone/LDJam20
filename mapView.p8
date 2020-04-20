@@ -62,7 +62,7 @@ function MapView:can_toggle_pc()
    return self.player:in_front_pc()
 end
 
-function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration)
+function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration, currentDay)
    map(0,0,0,0,self.size.w,self.size.h)
    self.player:draw(t)
    for npc in all(self.NPCs) do
@@ -83,7 +83,8 @@ function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration)
 
    rectfill(camX+0, camY+100, camX+128, camY+107, 2)
    rectfill(camX+0, camY+100, camX+min(flr(((t)/(dayDuration))*128), 128), camY+107, 3)
-   print("time", camX+1, camY+101, 0)
+   print("day "..currentDay, camX+1, camY+101, 0)
+   print("time", camX+112, camY+101, 0)
    
    rectfill(camX+0, camY+107, camX+128, camY+114, 2)
    rectfill(camX+0, camY+107, camX+flr((currentMoney/moneyGoal)*128), camY+114, 3)

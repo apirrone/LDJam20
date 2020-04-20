@@ -37,9 +37,10 @@ function Animation:draw(pos, t)
    if (self.freeze) then
       self.currentCyclePos = 0
    end
+
    
    spr(self.cycle[self.currentCyclePos]*self.size.w, pos.x, pos.y, self.size.w, self.size.h, self.flip)
-   if ((t%self.speed == 0) and  (self.freeze == false)) then
+   if (((flr(t*1000)/2)%(2) == 0) and  (self.freeze == false)) then
       self.currentCyclePos = (self.currentCyclePos+1)%self.cycleSize
    end
 end

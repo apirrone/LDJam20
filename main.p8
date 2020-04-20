@@ -44,7 +44,7 @@ function startDay()
    productivity = 0
    moneyGoal = 100
    currentMoney = 0
-   dayDuration = 50 -- seconds
+   dayDuration = 30 -- seconds
    gameOver = false
 end
 
@@ -102,7 +102,7 @@ function _update60()
    -- if flr(t)%2 == 0 then
    currentMoney += productivity*0.1
    -- end
-   printh(t)
+   -- printh(t)
    if t> dayDuration then
       if currentMoney >= moneyGoal then
 	 currentDay += 1
@@ -117,7 +117,7 @@ end
 function _draw()
    cls()
    if not gameOver then
-      currentView:draw(t, productivity, currentMoney, moneyGoal, dayDuration)
+      currentView:draw(t, productivity, currentMoney, moneyGoal, dayDuration, currentDay)
    else
       print("game over", 40, 50, 1)
    end
