@@ -19,7 +19,7 @@ end
 
 
 function _init()
-
+   -- music(1)
    palt(11, true)
    palt(0, false)
 
