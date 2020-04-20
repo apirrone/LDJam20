@@ -29,7 +29,8 @@ function Ticket:new(text, index, pc)
 end
 
 function Ticket:draw_cropped(pos)
-   cropped_text = (self.index + 1)..". "..sub(self.text, 0, 23) .. "..."
+   tmp = split(self.text, '\n')[1]
+   cropped_text = (self.index + 1)..". "..tmp .. "..."
 
    color = 7
    if(self.highlighted) then color = 8 end
@@ -38,8 +39,62 @@ function Ticket:draw_cropped(pos)
    print(cropped_text, 6, rowHeight*pos + 9, color)
 end
 
+function breakText(text, nbCharsPerLine)
+   words = split(text, ' ')
+   subStrings = {}
+
+   subString = words[1]
+   for i=2, #words, 1 do
+      tmp = subString..' '..words[i]
+      if #tmp < nbCharsPerLine then
+	 subString = subString..' '..words[i]
+      else
+	 add(subStrings, subString)
+	 subString = words[i]
+      end
+   end
+   add(subStrings, subString)
+
+   ret = subStrings[1]..'\n'
+   for i=2, #subStrings,1 do
+      ret = ret..subStrings[i]..'\n'
+
+   end
+   
+   return ret
+   
+end
+
+function split(str,d,dd)
+   local a={}
+   local c=0
+   local s=''
+   local tk=''
+
+   if dd~=nil then str=split(str,dd) end
+   while #str>0 do
+      if type(str)=='table' then
+	 s=str[1]
+	 add(a,split(s,d))
+	 del(str,s)
+      else
+	 s=sub(str,1,1)
+	 str=sub(str,2)
+	 if s==d then 
+	    add(a,tk)
+	    tk=''
+	 else
+	    tk=tk..s
+	 end
+      end
+   end
+   add(a,tk)
+   return a
+end
+
 function Ticket:draw_full()
-   print((self.index + 1)..". "..self.text.."\n"..generate_issues_string(self.pc.issues), 6, 9)
+   print((self.index + 1)..". "..self.text, 6, 9)
+   -- printh(text)
 end
 
 
@@ -77,11 +132,57 @@ function TicketsView:new()
    ticketsView.tickets = {}
    ticketsView.selector = Selector:new(0)
    ticketsView.displayState = 0 -- 0 : list, 1 : full message
+
+   ticketsView.texts = {
+      "Hi, my computer is not working. Can you help please ?",
+      "Sup guys, my computer stopped working. I don't know what caused it and I have important work to do.",
+      "computer broken help required",
+      "My mouse thingy doesn't click on the stuff help",
+      "altovistron ENTER How to repair computer ENTER How to fix screen ENTER IT phone number ENTER What does IT mean.",
+      "Good evening. My machine appears to be in need of a swift repair. Would you be so kind to come help me ?",
+      "Hello. Computer is broken again",
+      "Hi, I pressed the button that I usually use but this time it didn't work. What did you do ?",
+      "hello. my toolbars are not working correctly. can you fix them ?",
+      "I can't access the following websites : internet explorator and mozillo firefax",
+      "electric thingy no work need repairman",
+      "Hello, my internet access is unplugged. Could you update my screen please ?",
+      "Hey guys, you won't believe it but I won 1 000 000 dollars ! Anyway, now my computer won't work. Could you help ?",
+      "I downloaded more RAM because my PC was slow. Now it doesn't work. Can you help ?",
+      "I forgot how to use the keyboard. Please come quickly.",
+      "Come help me",
+      "Is this the IT department ?",
+      "My name is Brigitte. I have a computer.",
+      "computer is not working",
+      "my monitor is not connected to the world wide web. i think my mouse has caught rabies",
+      "Bonjour, mon ordinateur est en panne. J'aurai besoin d'assistance au plus vite.",
+      "hey IT guy, come help. Mike sent me a file and now my screen is all weird.",
+      "mY cOmPuTeR iS bRoKeN",
+      "Hi. I think something is wrong with my personal computer.",
+      "YES I HAVE TRIED TURNING IT OFF AND ON AGAIN",
+      "I think I disconnected the wide array defumisator and it causes a malfunction of the blockchain permutator",
+      "MY NAME IS STEVEN I CAN'T SEND E MAILS",
+      "Apparently I have won the lottery !! FUCK YOU GUYS I'LL NEVER COME BACK",
+      "Hey dude, what did you do to my computer ? Since you came within 10 meters of my office it started to bug... Come and fix your mistakes...",
+      "Haha look at that funny link : www.obviousmalware.com",
+      "Haha you will NOT believe how she is dressed !!!! www.ipromiseitsnotphishing.com",
+      "Hey guys ! Did you know that computers actually use electricity ? Anyway, it's not working again...",
+      "Hello, my computer is not turned on.",
+      "Hi, my computer is broken, I have tried everything but it's no help.",
+      "cOmPuTeR nO wOrK",
+      "I seem to have trouble fixing this electric contraption you installed in my office.",
+      "I can't click my icons !!!!!",
+      "My program is not loading my files !!!!!!!! HELPPPPP",
+      "Hi, I ha-",
+      "Sorry guys, broke the thing again. Can you help ?",
+   }
+   
    return ticketsView
 end
 
-function TicketsView:addTicket(text, pc)
+function TicketsView:addTicket(pc)
    id = #(self.tickets)
+   text = breakText(ticketsView.texts[flr(rnd(#ticketsView.texts))+1], 27)
+
    ticket = Ticket:new(text, id, pc)
    add(self.tickets, ticket)
    return id
