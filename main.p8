@@ -6,13 +6,15 @@ __lua__
 dt = null
 t = 0
 
--- =======================
--- DEBUG
-viewCycle = 2
-nbViews = 3
--- =======================
 function _init()
+   
+   currentDay = 1
+   startDay()
+   
+end
 
+function startDay()
+   t = 0
    mapView = MapView:new(Character:new(60, 60, 1, 2, 1))
 
    ticketsView = TicketsView:new()
@@ -21,15 +23,14 @@ function _init()
    pc_coords = mapView:scan_pcs()
    pc_list = {}
    for a,b in ipairs(pc_coords) do
-      -- for i,v in pairs(b) do
-      --    printh(i.." "..v)
-      -- end
+
       new_pc = PC:new(b.x, b.y, rnd(TOTAL_NB_ISSUES))
       add(pc_list,new_pc )
 
-      ticketId = ticketsView:addTicket("bonjour, mon pc il est \ndead de ouf, c'est trop\nchiant sa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc)
+      if flr(rnd(10)) == 0 then
+	 ticketId = ticketsView:addTicket("bonjour, mon pc il est \ndead de ouf, c'est trop\nchiant sa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc)
+      end
 
-      -- printh("-")
    end
 
    current_pc = pc_list[1]
@@ -40,6 +41,11 @@ function _init()
    palt(11, true)
    palt(0, false)
 
+   productivity = 0
+   moneyGoal = 100
+   currentMoney = 0
+   dayDuration = 50 -- seconds
+   gameOver = false
 end
 
 function _update60()
@@ -50,27 +56,12 @@ function _update60()
       dt = 1 / target_fps
    end
 
-   t += flr(dt*1000)
+   t += flr(dt*1000) -- in ms
 
-
-
-   -- ===============================
-   -- change view test
-
-   -- oldView = currentView
-   -- if (btnp(4)) then -- C
-
-   --    viewCycle = (viewCycle+1)%nbViews
-   --    if viewCycle == 0 then
-   -- 	 currentView = mapView
-   --    elseif viewCycle == 1 then
-   -- 	 currentView = ticketsView
-   --    elseif viewCycle == 2 then
-   -- 	 currentView = pcView
-   --    end
-
-   -- end
-
+   if gameOver then
+      return 0
+   end
+   
    oldView = currentView
 
    if(currentView == mapView) then
@@ -93,10 +84,6 @@ function _update60()
       end
    end
 
-   -- if currentView != oldView then
-   --    camera(0,0)
-   -- end
-   -- ===============================
 
    if(currentView == oldView) then
       return_value = currentView:update(t)
@@ -109,9 +96,29 @@ function _update60()
       camera(0,0)
    end
 
+
+   productivity = 1-(#ticketsView.tickets/#pc_list)
+
+   if t%100 == 0 then
+      currentMoney += productivity
+   end
+
+   if t/1000 > dayDuration then
+      if currentMoney >= moneyGoal then
+	 currentDay += 1
+	 startDay()
+      else
+	 gameOver = true	 
+      end
+   end
+
 end
 
 function _draw()
    cls()
-   currentView:draw(t)
+   if not gameOver then
+      currentView:draw(t, productivity, currentMoney, moneyGoal, dayDuration)
+   else
+      print("game over", 40, 50, 1)
+   end
 end

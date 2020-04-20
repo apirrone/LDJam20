@@ -10,7 +10,7 @@ function MapView:new(player)
    mapView.player = player
    mapView.NPCs = {}
    mapView.size = {w = 60 * 8, h = 25  * 8} -- TODO: use definitive size
-
+   self.productivity = 0
    return mapView
 end
 
@@ -49,7 +49,7 @@ function MapView:updateCamera()
    camera(camX, camY)
 end
 
-function MapView:update()
+function MapView:update(t)
    self.player:update(self)
    for npc in all(self.NPCs) do
       npc:update()
@@ -62,7 +62,7 @@ function MapView:can_toggle_pc()
    return self.player:in_front_pc()
 end
 
-function MapView:draw(t)
+function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration)
    map(0,0,0,0,self.size.w,self.size.h)
    self.player:draw(t)
    for npc in all(self.NPCs) do
@@ -80,8 +80,20 @@ function MapView:draw(t)
 
    camX = min(max(camX,0), self.size.w - 64)
    camY = min(max(camY,0), self.size.h - 64)
+
+   rectfill(camX+0, camY+100, camX+128, camY+107, 2)
+   rectfill(camX+0, camY+100, camX+min(flr(((t/1000)/(dayDuration))*128), 128), camY+107, 3)
+   print("time", camX+1, camY+101, 0)
    
-   rectfill(camX+0, camY+119, camX+128, camY+128, 5)
-   print("show tickets:\142", camX+2, camY+121, 15)
-   print("interact:\151", camX+83, camY+121, 15)
+   rectfill(camX+0, camY+107, camX+128, camY+114, 2)
+   rectfill(camX+0, camY+107, camX+flr((currentMoney/moneyGoal)*128), camY+114, 3)
+   print("money", camX+1, camY+108, 0)
+   
+   rectfill(camX+0, camY+114, camX+128, camY+120, 8)
+   rectfill(camX+0, camY+114, camX+flr(productivity*128), camY+120, 3)
+   print("productivity bar", camX+1, camY+115, 0)
+   
+   rectfill(camX+0, camY+121, camX+128, camY+128, 5)
+   print("show tickets:\142", camX+1, camY+122, 15)
+   print("interact:\151", camX+84, camY+122, 15)
 end
