@@ -166,11 +166,7 @@ function TicketsView:draw(t)
       print("exit : \142", 88, 118, 15)
    else
 
-      for t in all(self.tickets) do
-         if t.index == self.selector.pos then
-            t:draw_full()
-         end
-      end
+      self.tickets[self.selector.pos + 1]:draw_full()
 
       print("browse : \148\131", 5, 118, 15)
       print("go back : \139", 76, 118, 15)
