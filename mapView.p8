@@ -14,9 +14,9 @@ function MapView:new(player)
    mapView.pc_list = mapView:scan_pcs()
 
 
-   npcs_sprs = { 32, 64, 96}
+   npcs_sprs = { 32, 96}
    for pc in all(mapView.pc_list) do
-      npc_id = flr(rnd(3)) + 1
+      npc_id = flr(rnd(#npcs_sprs)) + 1
       spr_id = npcs_sprs[npc_id]
       npc = NPC:new((pc.pos.x - 1)*8, pc.pos.y*8, 1, 2, spr_id)
       mapView:addNPC(npc)
