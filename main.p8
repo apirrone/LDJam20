@@ -81,7 +81,7 @@ function _update60()
    end
 
    t += dt -- in s
-
+   
    if currentView == mainMenuView then
       if currentView:update(t) == -1 then
 	 startDay()
@@ -89,7 +89,6 @@ function _update60()
 	 return 0
       end
    end
-
 
 
    if gameOver then
@@ -116,6 +115,7 @@ function _update60()
       elseif(btnp(4)) then
          currentView = ticketsView
       end
+      
    end
 
 
@@ -144,6 +144,10 @@ function _update60()
       else
 	 gameOver = true
       end
+   end
+
+   if t > 2 and flr(rnd(500)) == 0 and (#ticketsView.tickets < #pc_list) then
+      generateTickets(1)
    end
 
 end
