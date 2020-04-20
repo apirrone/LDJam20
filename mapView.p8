@@ -82,7 +82,7 @@ function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration)
    camY = min(max(camY,0), self.size.h - 64)
 
    rectfill(camX+0, camY+100, camX+128, camY+107, 2)
-   rectfill(camX+0, camY+100, camX+min(flr(((t/1000)/(dayDuration))*128), 128), camY+107, 3)
+   rectfill(camX+0, camY+100, camX+min(flr(((t)/(dayDuration))*128), 128), camY+107, 3)
    print("time", camX+1, camY+101, 0)
    
    rectfill(camX+0, camY+107, camX+128, camY+114, 2)

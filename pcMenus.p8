@@ -730,8 +730,8 @@ function BrowserMenu:new(manyToolbars)
 	 browserMenu:addToolbar(browserMenu.toolbarNames[toolbarNameIndex])
       end
    end
-   
-   self.virus = false
+   browserMenu.virus = false
+   browserMenu.virusAnimationValue = 0
    return browserMenu
 end
 
@@ -793,6 +793,8 @@ function BrowserMenu:update(issues, t)
    end
 
 
+   
+
    return selectedMenuId
 end
 
@@ -847,7 +849,8 @@ function BrowserMenu:draw(t)
 
 
    if virus then
-      print(self.virusText, 25-((t/100)%30), 70-((t/100)%30), 8)
+      browserMenu.virusAnimationValue = (browserMenu.virusAnimationValue+0.5)%15
+      print(self.virusText, 25-browserMenu.virusAnimationValue, 70-browserMenu.virusAnimationValue, 8)
    end
    
    rectfill(6, 109, 121, 121, 5)
@@ -887,7 +890,7 @@ function AvastMenu:update(issues, t)
       self.scanStartTime = t
    end
 
-   if (self.scanning and t - self.scanStartTime > 2000) then
+   if (self.scanning and t - self.scanStartTime > 2) then
       self.scanning = false
       for v in all(self.settings) do
 	 v.status = true

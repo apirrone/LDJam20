@@ -56,7 +56,7 @@ function _update60()
       dt = 1 / target_fps
    end
 
-   t += flr(dt*1000) -- in ms
+   t += dt -- in s
 
    if gameOver then
       return 0
@@ -99,11 +99,11 @@ function _update60()
 
    productivity = 1-(#ticketsView.tickets/#pc_list)
 
-   if t%100 == 0 then
-      currentMoney += productivity
-   end
-
-   if t/1000 > dayDuration then
+   -- if flr(t)%2 == 0 then
+   currentMoney += productivity*0.1
+   -- end
+   printh(t)
+   if t> dayDuration then
       if currentMoney >= moneyGoal then
 	 currentDay += 1
 	 startDay()
