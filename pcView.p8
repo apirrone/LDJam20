@@ -29,12 +29,15 @@ PcView = {}
 function PcView:new(issues)
    local pcView = setmetatable({}, { __index = PcView})
 
-   PcView:loadIssues(issues)
+   PcView:loadIssues(issues, true)
 
    return pcView
 end
 
-function PcView:loadIssues(issues)
+function PcView:loadIssues(issues, start)
+   if not start then
+      sfx(0)
+   end
    self.issues = issues --generateIssues(nbIssues)
 
    self.menus = {}
