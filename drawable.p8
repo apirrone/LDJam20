@@ -10,7 +10,6 @@ function Drawable:new(x, y, w, h)
 	newObj.pos = {}
 	newObj.pos.x = x
 	newObj.pos.y = y
-	printh("npc pos: x "..(x or "X").." y "..(y or "X"))
 
 	newObj.size = {}
 	newObj.size.w = w
