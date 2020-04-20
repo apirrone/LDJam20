@@ -717,7 +717,8 @@ function BrowserMenu:new(manyToolbars)
    browserMenu.virusNames = {
       "congratulations !!!\nyou are visitor number\n1 000 000\n\nclick here to get your prize",
       "doctors hate him\nclick here to view his\ntechnique !!!",
-      "enlarge your appendix\nwith this simple trick\nclick here !!"
+      "enlarge your appendix\nwith this simple trick\nclick here !!",
+      "meet hot chicks from your city\nclick here !!!"
    }
    
    browserMenu.virusText = browserMenu.virusNames[flr(rnd(#browserMenu.virusNames))+1]
@@ -726,7 +727,6 @@ function BrowserMenu:new(manyToolbars)
       nbToolbars = flr(rnd(4))+1
       for i=0, nbToolbars, 1 do
 	 toolbarNameIndex = flr(rnd(#browserMenu.toolbarNames))+1
-	 -- filesMenu:addFile(filesMenu.fileNames[fileNameIndex])
 	 browserMenu:addToolbar(browserMenu.toolbarNames[toolbarNameIndex])
       end
    end
@@ -887,7 +887,7 @@ function AvastMenu:update(issues, t)
       self.scanStartTime = t
    end
 
-   if (t - self.scanStartTime > 2000) then
+   if (self.scanning and t - self.scanStartTime > 2000) then
       self.scanning = false
       for v in all(self.settings) do
 	 v.status = true
