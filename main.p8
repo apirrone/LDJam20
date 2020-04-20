@@ -53,7 +53,7 @@ function startDay()
    productivity = 0
    moneyGoal = 100
    currentMoney = 0
-   dayDuration = 240 -- seconds
+   dayDuration = 300 -- seconds
    gameOver = false
 end
 
@@ -130,7 +130,7 @@ function _update60()
    productivity = 1-(#ticketsView.tickets/#pc_list)
 
    -- if flr(t)%2 == 0 then
-   currentMoney += productivity*0.1
+   currentMoney += productivity*0.01
    -- end
    -- printh(t)
    if t > dayDuration then
