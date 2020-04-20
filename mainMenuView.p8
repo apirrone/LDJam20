@@ -20,7 +20,7 @@ end
 
 function MainMenuView:draw(t)
    rectfill(self.traveling, 0, self.traveling+128, 128, 1)
-   spr(8, self.traveling+36, 3, 8, 4)
+   spr(72, self.traveling+30, 3, 8, 4)
    
    -- print("keep i.t. alive")
    if flr(t)%2 ==0 then
