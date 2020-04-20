@@ -115,7 +115,7 @@ function _update60()
    currentMoney += productivity*0.1
    -- end
    -- printh(t)
-   if t> dayDuration then
+   if t > dayDuration then
       if currentMoney >= moneyGoal then
 	 currentDay += 1
 	 startDay()
