@@ -10,7 +10,18 @@ function MapView:new(player)
    mapView.player = player
    mapView.NPCs = {}
    mapView.size = {w = 60 * 8, h = 25  * 8} -- TODO: use definitive size
-   self.productivity = 0
+   mapView.productivity = 0
+   mapView.pc_list = mapView:scan_pcs()
+
+
+   npcs_sprs = { 32, 64, 96}
+   for pc in all(mapView.pc_list) do
+      npc_id = flr(rnd(3)) + 1
+      spr_id = npcs_sprs[npc_id]
+      npc = NPC:new((pc.pos.x - 1)*8, pc.pos.y*8, 1, 2, spr_id)
+      mapView:addNPC(npc)
+   end
+
    return mapView
 end
 
@@ -25,12 +36,12 @@ end
 
 function MapView:scan_pcs()
 
-   pc_list = {}
+   local pc_list = {}
 
    for i=0, flr(self.size.w/8) do
       for j=0, flr(self.size.h/8) do
          if(is_pc(i,j)) then
-            add(pc_list, {x=i,y=j})
+            add(pc_list, PC:new(i, j, 0))
          end
       end
    end
@@ -52,10 +63,10 @@ end
 function MapView:update(t)
    if t >= 2 then
       self.player:update(self)
-      for npc in all(self.NPCs) do
-	 npc:update()
-      end
 
+      for npc in all(self.NPCs) do
+	      npc:update(self)
+      end
       self:updateCamera()
    end
 end
@@ -73,10 +84,10 @@ function MapView:draw(t, productivity, currentMoney, moneyGoal, dayDuration, cur
       map(0,0,0,0,self.size.w,self.size.h)
       self.player:draw(t)
       for npc in all(self.NPCs) do
-	 npc:draw()
+         npc:draw()
       end
 
-      for pc in all(pc_list) do --weird accessing global like that
+      for pc in all(self.pc_list) do --weird accessing global like that
          if(pc.highlight) then
             color = 8
             if(is_all_ok(pc.issues)) then color = 11 end

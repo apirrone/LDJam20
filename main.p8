@@ -39,12 +39,8 @@ function startDay()
    nb_tickets =  flr(rnd(MAX_TICKETS_PER_DAY -1)) +1
 
 
-   pc_coords = mapView:scan_pcs()
-   pc_list = {}
-   for a,b in ipairs(pc_coords) do
-      new_pc = PC:new(b.x, b.y, 0)
-      add(pc_list,new_pc )
-   end
+
+   pc_list = mapView.pc_list
 
    generateTickets(nb_tickets)
 
@@ -81,7 +77,7 @@ function _update60()
    end
 
    t += dt -- in s
-   
+
    if currentView == mainMenuView then
       if currentView:update(t) == -1 then
 	 startDay()
@@ -115,7 +111,7 @@ function _update60()
       elseif(btnp(4)) then
          currentView = ticketsView
       end
-      
+
    end
 
 
@@ -139,10 +135,10 @@ function _update60()
    -- printh(t)
    if t > dayDuration then
       if currentMoney >= moneyGoal then
-	 currentDay += 1
-	 startDay()
+         currentDay += 1
+         startDay()
       else
-	 gameOver = true
+	      gameOver = true
       end
    end
 
