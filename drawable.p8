@@ -39,7 +39,7 @@ end
 function NPC:draw()
 	if(self.pos.x == self.orig_pos.x) then
 		spr(self.spr_id, self.pos.x, self.pos.y, self.size.w,1)
-		spr(129, self.pos.x, self.pos.y+9)
+		spr(129, self.pos.x, self.pos.y+8)
 	else
 		spr(self.spr_id,self.pos.x,self.pos.y, self.size.w,self.size.h)
 	end
