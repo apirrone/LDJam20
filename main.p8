@@ -19,7 +19,6 @@ end
 
 
 function _init()
-   music(1)
    palt(11, true)
    palt(0, false)
 
@@ -31,6 +30,8 @@ end
 
 function startDay()
    sfx(13+((currentDay-1)%6))
+
+   music(0)
    t = 0
    mapView = MapView:new(Character:new(60, 60, 1, 2, 1))
 
