@@ -74,4 +74,14 @@ function MapView:draw(t)
          rect(pc.pos.x *8,pc.pos.y*8,(pc.pos.x +1)*8,(pc.pos.y + 1)*8,8)
       end
    end
+
+   camX = self.player.pos.x - 64;
+   camY = self.player.pos.y - 64;
+
+   camX = min(max(camX,0), self.size.w - 64)
+   camY = min(max(camY,0), self.size.h - 64)
+   
+   rectfill(camX+0, camY+119, camX+128, camY+128, 5)
+   print("show tickets:\142", camX+2, camY+121, 15)
+   print("interact:\151", camX+83, camY+121, 15)
 end

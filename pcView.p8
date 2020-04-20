@@ -40,7 +40,7 @@ function PcView:loadIssues(issues)
    self.menus = {}
    add(self.menus, DesktopMenu:new(self.issues))
 
-   self:generateMenus(self.issues)
+   self:generateMenus()
 
 
    self.allOk = true
@@ -65,75 +65,24 @@ function PcView:loadIssues(issues)
 
 end
 
-function PcView:generateMenus(issues)
+function PcView:generateMenus()
 
-   unpluggedKeyboard = false
-   unpluggedMouse    = false
-   unpluggedScreen   = false
-   unpluggedEthernet = false
-   hardDriveFull     = false
-   verNumDisabled    = false
-   mouseDisabled     = false
-   printingDisabled  = false
-   registerDisabled  = false
-   manyToolbars      = false
-   virus             = false
+   -- WARNING indexed starting 1
+   unpluggedKeyboard = (self.issues[1] == 0)
+   unpluggedMouse    = (self.issues[2] == 0)
+   unpluggedScreen   = (self.issues[3] == 0)
+   unpluggedEthernet = (self.issues[4] == 0)
 
-   i = 0
-   for v in all(self.issues) do
-      if v == 0 then
-	 if i == 0 then
-	    unpluggedKeyboard = true
-	 end
+   mouseDisabled     = (self.issues[5] == 0)
+   printingDisabled  = (self.issues[6] == 0)
+   registerDisabled  = (self.issues[7] == 0)
+   
+   hardDriveFull     = (self.issues[9] == 0)
+   verNumDisabled    = (self.issues[10] == 0)
+   hardDriveFull     = (self.issues[11] == 0)
+   manyToolbars      = (self.issues[12] == 0)
+   virus             = (self.issues[13] == 0)
 
-	 if i == 1 then
-	    unpluggedMouse = true
-	 end
-
-	 if i == 2 then
-	    unpluggedScreen = true
-	 end
-
-	 if i == 3 then
-	    unpluggedEthernet = true
-	 end
-
-	 if i == 4 then
-	    mouseDisabled = true
-	 end
-
-	 if i == 5 then
-	    printingDisabled = true
-	 end
-
-	 if i == 6 then
-	    registerDisabled = true
-	 end
-
-	 if i == 8 then
-	    hardDriveFull = true
-	 end
-
-	 if i == 9 then
-	    verNumDisabled = true
-	 end
-
-	 if i == 10 then
-	    hardDriveFull = true
-	 end
-
-	 if i == 11 then
-	    manyToolbars = true
-	 end
-
-	 if i == 12 then
-	    virus = true
-	 end
-
-      end
-
-      i+=1
-   end
 
    cablesMenu = CablesMenu:new()
    cablesMenu:addSetting("unplugged keyboard", not unpluggedKeyboard, true)
@@ -189,52 +138,24 @@ function PcView:update(t)
       reconstructedIssues = {}
       self.allOk = true
       for v in all(self.menus) do
-	      for vv in all(v.settings) do
-	         if vv.status then
-	            add(reconstructedIssues, 1)
-	         else
-	            add(reconstructedIssues, 0)
-	         end
-	         if not vv.status then
-	            self.allOk = false
-	         end
-	      end
+	 for vv in all(v.settings) do
+	    if vv.status then
+	       add(reconstructedIssues, 1)
+	    else
+	       add(reconstructedIssues, 0)
+	    end
+	    if not vv.status then
+	       self.allOk = false
+	    end
+	 end
       end
 
 
-      ethernetUnPlugged = false
-      hardDriveFull     = false
-      virus             = false
       self.issues = reconstructedIssues
-      printh("-----------")
-      i = 0
-      for aa in all(self.issues) do
-	      printh(i.." "..aa)
-	      i += 1
-      end
-      printh("-----------")
-      i = 0
-      for v in all(self.issues) do
-	      if i == 3 then -- unplugged ethernet
-	         if v == 0 then
-	            ethernetUnPlugged = true
-	         end
-	      end
-
-         if i == 10 then
-            if v == 0 then
-               hardDriveFull = true
-            end
-         end
-
-         if i == 12 then
-            if v == 0 then
-               virus = true
-            end
-         end
-	      i+=1
-      end
-
+      
+      ethernetUnPlugged = (self.issues[4] == 0)
+      hardDriveFull     = (self.issues[11] == 0)
+      virus             = (self.issues[13] == 0)
 
       i = 0
       for v in all(self.menus) do
@@ -258,11 +179,7 @@ function PcView:update(t)
 
 
       if not hardDriveFull then
-         for vv in all(self.issues) do
-            if vv == 8 then
-               vv = 1
-            end
-         end
+	 self.issues[9] = 1
       end
 
    end
@@ -279,7 +196,7 @@ function PcView:draw(t)
 
    rectfill(39, 124, 89, 125, 0)
 
-   self.currentMenu:draw()
+   self.currentMenu:draw(t)
 
    -- TODO DEBUG remove this ============
    if self.allOk then
@@ -324,7 +241,7 @@ function generateIssues(nbIssues)
       if issue then
          add(issues, 0)
       else
-	      add(issues, 1)
+	 add(issues, 1)
       end
    end
 

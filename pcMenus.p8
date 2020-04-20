@@ -106,15 +106,12 @@ function DesktopMenu:new(issues)
    add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 1, 203, desktopMenu.spacing)) -- Monitoring
    add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 1, 206, desktopMenu.spacing)) -- Settings
 
-   
-   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 0, 193, spacing))
-   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 0, 1, 198, spacing))
-   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 1, 1, 199, spacing))
-   -- add(desktopMenu.icons, Icon:new(#desktopMenu.icons+1, 2, 1, 200, spacing))
-
    desktopMenu.cursor = Cursor:new(0, 0, desktopMenu.spacing)
-
    
+   self.virus = false
+   self.unpluggedKeyboard = false
+   self.unpluggedMouse = false
+   self.unpluggedScreen = false
    return desktopMenu
 end
 
@@ -125,32 +122,14 @@ function DesktopMenu:update(issues, t)
    newPos.y = self.cursor.pos.y
 
    selectedMenuId = 0
-
-   unpluggedKeyboard = false
-   unpluggedMouse = false
-   unpluggedScreen = false
+   self.virus = (self.issues[13] == 0)
+   self.unpluggedKeyboard = (self.issues[1] == 0)
+   self.unpluggedMouse = (self.issues[2] == 0)
+   self.unpluggedScreen = (self.issues[3] == 0)
    
-   i = 0
-   for v in all(self.issues) do
-      if v == 0 then
-	 if i == 0 then
-	    unpluggedKeyboard = true
-	 end
-	 
-	 if i == 1 then
-	    unpluggedMouse = true
-	 end
-	 if i == 2 then
-	    unpluggedScreen = true
-	 end
-      end
-      i+= 1
-   end
-
-
    if (btnp(5)) then -- X
       if (self.exitState == 0) then
-	 if (not unpluggedScreen and not unpluggedKeyboard and not unpluggedMouse) then
+	 if (not self.unpluggedScreen and not self.unpluggedKeyboard and not self.unpluggedMouse) then
 	    selectedMenuId = self.cursor.currentIndex
 	 end
       else
@@ -169,8 +148,8 @@ function DesktopMenu:update(issues, t)
       end
    end
    
-   if (not unpluggedMouse) and (not unpluggedKeyboard) then
-   
+   if (not self.unpluggedMouse) and (not self.unpluggedKeyboard) then
+      
       if (btnp(⬆️)) then
 	 newPos.y -= 1
       elseif (btnp(⬇️)) then
@@ -184,42 +163,36 @@ function DesktopMenu:update(issues, t)
       end
 
 
-   
+      
       tmpIndex = self:isValidPos(newPos.x, newPos.y)
       if tmpIndex then
 	 self.cursor.pos = newPos
 	 self.cursor.currentIndex = tmpIndex
       end
    end
+   
    return selectedMenuId
 end
 
 
-function DesktopMenu:draw()
+function DesktopMenu:draw(t)
 
-   unpluggedScreen = false
-   i = 0
-   for v in all(self.issues) do
-      if v == 0 then
-	 if i == 2 then
-	    unpluggedScreen = true
-	 end
-      end
-      i+= 1
-   end
    
    rectfill(6, 109, 121, 121, 5)
    
-   if not unpluggedScreen then
+   if not self.unpluggedScreen then
       for v in all(self.icons) do
 	 v:draw()
       end
-   
-
-
+      
       print("lucarne 98", 82, 103, 2)
 
       self.cursor:draw()
+
+
+      if self.virus then
+	 print("/!\\ warning !!!\nyour data has been encrypted\nsend money to 0x138c92\nto get decrypt key", 10, 70, 8)
+      end
       
       -- print(self.cursor.currentIndex, 0, 0)
       if self.exitState == 0 then
@@ -271,12 +244,25 @@ function Setting:new(text, iconIndex, status, spacing, togglable, bgColor)
    setting.bgColor = bgColor
    return setting
 end
-
-function Setting:draw()
+function Setting:generateRandomString()
+   string = ""
+   for i=0,4,1 do
+      string = string..''..flr(rnd(50))
+   end
+   
+   
+   return string
+end
+function Setting:draw(encrypted)
    if self.bgColor != -1 then
       rectfill(self.pos.x-2, self.pos.y-2, 121, self.pos.y+8, self.bgColor)
    end
-   print(self.text, self.pos.x, self.pos.y, 9)
+
+   if not encrypted then
+      print(self.text, self.pos.x, self.pos.y, 9)
+   else
+      print(self.generateRandomString(), self.pos.x, self.pos.y, 9)
+   end
 end
 
 
@@ -591,12 +577,12 @@ function FilesMenu:new(hardDriveFull)
       "halflife3.exe",
       "windsofwinter.ipub",
       "40shadesofgreen.ipub"}
-   
+
    for i=0,7,1 do
       fileNameIndex = flr(rnd(#filesMenu.fileNames))+1
       filesMenu:addFile(filesMenu.fileNames[fileNameIndex])
    end
-   
+   filesMenu.virus = false
    filesMenu.settings = {}
    add(filesMenu.settings, Setting:new("", 1, hardDriveFull, 0, true, -1))
    
@@ -605,6 +591,8 @@ end
 
 function FilesMenu:update(issues, t)
    selectedMenuId = self.id
+
+   self.virus = (issues[13] == 0)
    
    newPos = {}
    newPos.x = self.cursor.pos.x
@@ -677,7 +665,7 @@ function FilesMenu:draw()
    i = 0
    for v in all(self.files) do
       if v.status then 
-	 v:draw()
+	 v:draw(self.virus)
 	 j = 0
 	 for vv in all(self.icons) do
 	    if i == j then
@@ -706,7 +694,7 @@ function BrowserMenu:new(manyToolbars)
    
    browserMenu.id = BROWSER_MENU_ID
 
-   
+   self.issues = {}
    browserMenu.settings = {}
    browserMenu.toolbars = {}
 
@@ -726,6 +714,14 @@ function BrowserMenu:new(manyToolbars)
       "the best toolbar 1995"
    }
 
+   browserMenu.virusNames = {
+      "congratulations !!!\nyou are visitor number\n1 000 000\n\nclick here to get your prize",
+      "doctors hate him\nclick here to view his\ntechnique !!!",
+      "enlarge your appendix\nwith this simple trick\nclick here !!"
+   }
+   
+   browserMenu.virusText = browserMenu.virusNames[flr(rnd(#browserMenu.virusNames))+1]
+
    if not manyToolbars then
       nbToolbars = flr(rnd(4))+1
       for i=0, nbToolbars, 1 do
@@ -735,7 +731,7 @@ function BrowserMenu:new(manyToolbars)
       end
    end
    
-   
+   self.virus = false
    return browserMenu
 end
 
@@ -747,6 +743,8 @@ end
 
 function BrowserMenu:update(issues, t)
    selectedMenuId = self.id
+   self.issues = issues
+   self.virus = (self.issues[13] == 0)
    
    newPos = {}
    newPos.x = self.cursor.pos.x
@@ -792,7 +790,8 @@ function BrowserMenu:update(issues, t)
    if tmpIndex then
       self.cursor.pos = newPos
       self.cursor.currentIndex = tmpIndex
-   end   
+   end
+
 
    return selectedMenuId
 end
@@ -810,7 +809,7 @@ function BrowserMenu:isValidPos(x, y)
 end
 
 
-function BrowserMenu:draw()
+function BrowserMenu:draw(t)
 
    spr(194, 7, 8, 1, 1)
    print("internet explorator", 18, 10)
@@ -846,7 +845,10 @@ function BrowserMenu:draw()
       self.cursor:draw()
    end
 
-   
+
+   if virus then
+      print(self.virusText, 25-((t/100)%30), 70-((t/100)%30), 8)
+   end
    
    rectfill(6, 109, 121, 121, 5)
    print("suppress : \151", 7, 110, 15)

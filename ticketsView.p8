@@ -40,7 +40,7 @@ function Ticket:new(text, index, pc)
 end
 
 function Ticket:draw_cropped(pos)
-   cropped_text = (self.index + 1)..". "..sub(self.text, 0, 25) .. "..."
+   cropped_text = (self.index + 1)..". "..sub(self.text, 0, 23) .. "..."
 
    color = 7
    if(self.highlighted) then color = 8 end
@@ -162,6 +162,7 @@ function TicketsView:draw(t)
       self.selector:draw()
 
       print("full ticket : \145", 5, 118, 15)
+      print("select : \151", 80, 112, 15)
       print("exit : \142", 88, 118, 15)
    else
 

@@ -27,7 +27,7 @@ function _init()
       new_pc = PC:new(b.x, b.y, rnd(TOTAL_NB_ISSUES))
       add(pc_list,new_pc )
 
-      ticketId = ticketsView:addTicket("bonjour, mon pc il est dead \nde ouf, c'est trop chiant\nsa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc)
+      ticketId = ticketsView:addTicket("bonjour, mon pc il est \ndead de ouf, c'est trop\nchiant sa mere.\n\n\n\n\n\n\n\n\n                    micheline", new_pc)
 
       -- printh("-")
    end
