@@ -9,6 +9,7 @@ __lua__
 #include mapView.p8
 #include pcView.p8
 #include pcMenus.p8
+#include mainMenuView.p8
 #include main.p8
 
 __gfx__

@@ -8,9 +8,13 @@ t = 0
 
 function _init()
    
-   currentDay = 1
-   startDay()
+   palt(11, true)
+   palt(0, false)
    
+   mainMenuView = MainMenuView:new()
+   currentView = mainMenuView
+   currentDay = 1
+   -- startDay()   
 end
 
 function startDay()
@@ -38,8 +42,6 @@ function startDay()
 
    currentView = mapView
 
-   palt(11, true)
-   palt(0, false)
 
    productivity = 0
    moneyGoal = 100
@@ -58,6 +60,16 @@ function _update60()
 
    t += dt -- in s
 
+   if currentView == mainMenuView then
+      if currentView:update(t) == -1 then
+	 startDay()
+      else
+	 return 0
+      end
+   end
+
+
+   
    if gameOver then
       return 0
    end
