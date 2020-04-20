@@ -228,7 +228,6 @@ function generateIssues(nbIssues)
    -- browser    : many toolbars
    -- virus      : pron ads, ransomware (one setting, running avast clears it)
 
-
    -- total_nb_issues = nb_physical_issues + nb_settings_issues + nb_monitoring_issues + nb_browser_issues + nb_virus_issues
 
    issues_str = ""
